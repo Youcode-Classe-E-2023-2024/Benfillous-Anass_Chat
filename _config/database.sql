@@ -14,6 +14,7 @@ create table room
     room_id    bigint auto_increment primary key,
     room_name  varchar(255) not null,
     creator    bigint,
+    room_picture  text null,
     is_deleted TINYINT(1) DEFAULT 0,
     FOREIGN KEY (creator) REFERENCES user (user_id)
 );
