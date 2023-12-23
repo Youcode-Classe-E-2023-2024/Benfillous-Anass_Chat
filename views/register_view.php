@@ -7,7 +7,7 @@
 
     <label>User Picture</label>
     <!-- Input for uploading/selecting an image -->
-    <input name="picture" type="file" id="imageInput" class="hidden">
+    <input class="login-input" name="picture" type="file" id="imageInput" class="hidden">
 
     <!-- Circular image container -->
     <label for="imageInput" class="cursor-pointer flex justify-center">
@@ -17,13 +17,13 @@
     </label>
 
     <label for="username">Username</label>
-    <input name="username" type="text" placeholder="Username" id="username">
+    <input class="login-input" name="username" type="text" placeholder="Username" id="username">
 
     <label for="email">Email</label>
-    <input name="email" type="text" placeholder="Email" id="email">
+    <input class="login-input" name="email" type="text" placeholder="Email" id="email">
 
     <label for="password">Password</label>
-    <input name="password" type="password" placeholder="Password" id="password">
+    <input class="login-input" name="password" type="password" placeholder="Password" id="password">
 
     <div class="social">
         <button name="signup">Sign Up</button>

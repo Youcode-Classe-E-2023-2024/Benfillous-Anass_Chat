@@ -116,7 +116,7 @@ label {
     font-weight: 500;
 }
 
-input {
+.login-input {
     display: block;
     height: 200px;
     width: 100%;

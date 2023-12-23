@@ -6,10 +6,10 @@
     <h3>Login Here</h3>
 
     <label for="username">Username</label>
-    <input name="email" type="text" placeholder="Email" id="username">
+    <input class="login-input" name="email" type="text" placeholder="Email" id="username">
 
     <label for="password">Password</label>
-    <input name="password" type="password" placeholder="Password" id="password">
+    <input class="login-input" name="password" type="password" placeholder="Password" id="password">
 
     <div class="social">
         <button name="login">Login</button>
