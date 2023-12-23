@@ -24,7 +24,8 @@ class User
     {
         global $db;
         $result = $db->query("SELECT * FROM users");
-        return $result->fetch_all(MYSQLI_ASSOC);
+        if($result)
+            return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     function edit()

@@ -7,10 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?= ucfirst($page) ?></title>
     <link rel="stylesheet" href="<?= PATH ?>assets/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <h1><?= ucfirst($page) ?> View</h1>
-
     <main>
         <?php include_once 'views/' . $page . '_view.php'; ?>
     </main>
