@@ -1,5 +1,4 @@
 <?php
-
 class User
 {
     public $id;
@@ -12,6 +11,7 @@ class User
         global $db;
 
         $result = $db->query("SELECT * FROM users WHERE users_id = '$id'");
+
         $user = $result->fetch_assoc();
 
         $this->id = $user['users_id'];
@@ -23,9 +23,33 @@ class User
     static function getAll()
     {
         global $db;
-        $result = $db->query("SELECT * FROM users");
-        if($result)
+        $result = $db->query("SELECT * FROM user");
+        if ($result)
             return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    static function user_checker($email, $db)
+    {
+        $sql = "SELECT * FROM user WHERE email = '$email'";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result)
+            return $result->fetch_assoc();
+        return false;
+    }
+
+    static function insertUser($username, $email, $password, $picture, $db)
+    {
+        $sql = "INSERT INTO user (username, email, password, picture) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $password, $picture);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($db);
     }
 
     function edit()

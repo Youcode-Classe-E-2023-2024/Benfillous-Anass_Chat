@@ -2,12 +2,12 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form class="register-form">
+<form method="post" action="<?= PATH ?>controllers/register_controller.php" class="register-form" enctype="multipart/form-data">
     <h3>Sign Up Here</h3>
 
     <label>User Picture</label>
     <!-- Input for uploading/selecting an image -->
-    <input class="login-input" name="picture" type="file" id="imageInput" class="hidden">
+    <input class="login-input" name="picture" type="file" accept="image" id="imageInput" style="display: none">
 
     <!-- Circular image container -->
     <label for="imageInput" class="cursor-pointer flex justify-center">
