@@ -2,7 +2,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form>
+<form method="post" action="<?= PATH ?>controllers/login_controller.php">
     <h3>Login Here</h3>
 
     <label for="username">Username</label>

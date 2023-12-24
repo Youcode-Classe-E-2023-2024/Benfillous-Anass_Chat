@@ -28,6 +28,9 @@
                 </svg>
             </div>
         </div>
+        <a href="<?= PATH ?>controllers/login_controller.php?logout=true" class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-4">
+            Logout
+        </a>
     </div>
 
     <!-- Chat content -->

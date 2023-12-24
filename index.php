@@ -10,7 +10,15 @@ spl_autoload_register(function ($class) {
     include_once '_classes/' . $class . '.php';
 });
 
-if (isset($_GET['page']) && !empty($_GET['page'])) {
+if (!isset($_SESSION["login"])) {
+    if (isset($_GET['page']) && $_GET['page'] == "login")
+        $page = 'login';
+    else if (isset($_GET['page']) && $_GET['page'] == "register")
+        $page = 'register';
+    else $page = 'login';
+} else if (isset($_SESSION["login"])) {
+    $page = 'home';
+} else if (isset($_GET['page']) && !empty($_GET['page'])) {
     $page = trim(strtolower($_GET['page']));
 } else {
     $page = 'home';
