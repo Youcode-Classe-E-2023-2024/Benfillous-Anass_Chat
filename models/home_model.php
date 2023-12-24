@@ -11,4 +11,3 @@
 //dd($user);
 
 $users = User::getAll();
-//dd($users);

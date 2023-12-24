@@ -28,7 +28,8 @@
                 </svg>
             </div>
         </div>
-        <a href="<?= PATH ?>controllers/login_controller.php?logout=true" class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-4">
+        <a href="<?= PATH ?>controllers/login_controller.php?logout=true"
+           class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-4">
             Logout
         </a>
     </div>
@@ -169,15 +170,17 @@
             </div>
             <div class="mb-2">
                 <label for="roomMembers" class="text-white">Room Members</label>
-                <select id="roomMembers"
+                <select id="roomMembers" multiple name="room-members[]"
                         class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
-                    <option value="user1">User 1</option>
-                    <option value="user2">User 2</option>
-                    <!-- Add more options for other users -->
+                    <?php foreach ($users as $user) { ?>
+                        <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
+                    <?php } ?>
                 </select>
             </div>
             <div class="mt-8 cursor-pointer text-center">
-                <div class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"">Add New Room</div>
+                <div id="addRoomBtn" class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
+                    Add New Room
+                </div>
             </div>
         </div>
     </div>
@@ -193,7 +196,6 @@
     const rooms = document.querySelectorAll(".rooms");
     const addRoom = document.getElementById("addRoom");
 
-    console.log(memberList.style.display);
 
     myProfile.addEventListener("click", () => {
         memberList.style.display = "none";
@@ -213,4 +215,30 @@
     addRoom.addEventListener("click", () => {
         roomForm.classList.toggle("hidden");
     });
+
+    const addRoomBtn = document.getElementById("addRoomBtn");
+
+    function createRoom(roomName, members) {
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {roomName, members},
+            success: (data) => {
+                roomForm.classList.add("hidden");
+            }
+        });
+    }
+
+    addRoomBtn.addEventListener("click", ()=>{
+        createRoom($("#roomName").val(), $("#roomMembers").val())
+    })
+
+    function displayRooms() {
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {req: "displayRooms"}
+        })
+    }
+
 </script>
