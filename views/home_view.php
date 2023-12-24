@@ -27,7 +27,7 @@
             </div>
         </div>
         <a href="<?= PATH ?>controllers/login_controller.php?logout=true"
-           class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-4">
+           class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
             Logout
         </a>
     </div>
@@ -192,6 +192,7 @@
     const roomForm = document.getElementById("roomForm");
 
     const myProfile = document.getElementById("myprofile");
+    const rooms = document.querySelectorAll(".rooms");
     const addRoom = document.getElementById("addRoom");
 
 
@@ -200,6 +201,14 @@
         chatContent.classList.add("hidden");
         profileSection.classList.remove("hidden");
         roomForm.classList.add("hidden");
+    });
+    rooms.forEach((elm) => {
+        elm.addEventListener("click", () => {
+            memberList.style.display = "";
+            chatContent.classList.remove("hidden");
+            profileSection.classList.add("hidden");
+            roomForm.classList.add("hidden");
+        });
     });
 
     addRoom.addEventListener("click", () => {
@@ -224,7 +233,6 @@
         createRoom($("#roomName").val(), $("#roomMembers").val())
     })
 
-
     const roomsSection = document.getElementById("rooms-section");
 
     function displayRooms() {
@@ -239,12 +247,12 @@
                 roomsData.forEach((room, index) => {
                     // Add a data attribute to store the room information
                     roomsSection.innerHTML += `
-                    <div class="room cursor-pointer mb-4" data-room-id="${room.id}">
-                        <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
-                            <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+                        <div class="room cursor-pointer mb-4" data-room-id="${room.room_id}">
+                            <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
+                                <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
                 });
 
                 // Add event listener after rooms are loaded
@@ -266,4 +274,5 @@
 
 
     displayRooms();
+
 </script>
