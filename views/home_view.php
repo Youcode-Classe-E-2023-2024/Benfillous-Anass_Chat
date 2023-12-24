@@ -11,10 +11,8 @@
             </div>
         </div>
 
-        <div class="rooms cursor-pointer mb-4">
-            <div
-                    class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
-                <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+        <div class="overflow-y-auto h-[500px] mb-3 w-24">
+            <div id="rooms-section">
             </div>
         </div>
 
@@ -178,7 +176,8 @@
                 </select>
             </div>
             <div class="mt-8 cursor-pointer text-center">
-                <div id="addRoomBtn" class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
+                <div id="addRoomBtn"
+                     class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
                     Add New Room
                 </div>
             </div>
@@ -193,7 +192,6 @@
     const roomForm = document.getElementById("roomForm");
 
     const myProfile = document.getElementById("myprofile");
-    const rooms = document.querySelectorAll(".rooms");
     const addRoom = document.getElementById("addRoom");
 
 
@@ -202,14 +200,6 @@
         chatContent.classList.add("hidden");
         profileSection.classList.remove("hidden");
         roomForm.classList.add("hidden");
-    });
-    rooms.forEach((elm) => {
-        elm.addEventListener("click", () => {
-            memberList.style.display = "";
-            chatContent.classList.remove("hidden");
-            profileSection.classList.add("hidden");
-            roomForm.classList.add("hidden");
-        });
     });
 
     addRoom.addEventListener("click", () => {
@@ -225,20 +215,55 @@
             data: {roomName, members},
             success: (data) => {
                 roomForm.classList.add("hidden");
+                displayRooms();
             }
         });
     }
 
-    addRoomBtn.addEventListener("click", ()=>{
+    addRoomBtn.addEventListener("click", () => {
         createRoom($("#roomName").val(), $("#roomMembers").val())
     })
 
+
+    const roomsSection = document.getElementById("rooms-section");
+
     function displayRooms() {
+        roomsSection.innerHTML = "";
         $.ajax({
             type: "POST",
             url: "controllers/home_controller.php",
-            data: {req: "displayRooms"}
-        })
+            data: {req: "displayRooms"},
+            success: (data) => {
+                roomsData = JSON.parse(data);
+
+                roomsData.forEach((room, index) => {
+                    // Add a data attribute to store the room information
+                    roomsSection.innerHTML += `
+                    <div class="room cursor-pointer mb-4" data-room-id="${room.id}">
+                        <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
+                            <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+                        </div>
+                    </div>
+                `;
+                });
+
+                // Add event listener after rooms are loaded
+                $(roomsSection).on("click", ".room", function () {
+                    // Access the room information using the data attribute
+                    const roomId = $(this).data("room-id");
+
+                    // Now you can use roomId as needed
+                    console.log("Room clicked:", roomId);
+
+                    memberList.style.display = "";
+                    chatContent.classList.remove("hidden");
+                    profileSection.classList.add("hidden");
+                    roomForm.classList.add("hidden");
+                });
+            }
+        });
     }
 
+
+    displayRooms();
 </script>

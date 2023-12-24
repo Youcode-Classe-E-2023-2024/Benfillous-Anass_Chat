@@ -21,4 +21,12 @@ class Room {
         mysqli_stmt_bind_param($stmt, "ii", $roomId, $member);
         mysqli_stmt_execute($stmt);
     }
+
+    static function getAll()
+    {
+        global $db;
+        $result = $db->query("SELECT * FROM room");
+        if ($result)
+            return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }

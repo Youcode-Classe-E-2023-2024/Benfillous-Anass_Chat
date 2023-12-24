@@ -17,5 +17,6 @@ if (isset($_POST["roomName"])) {
 }
 
 if (isset($_POST["req"]) && $_POST["req"] == "displayRooms") {
-    echo "nadi2";
+    $rooms = Room::getAll();
+    echo json_encode($rooms);
 }
