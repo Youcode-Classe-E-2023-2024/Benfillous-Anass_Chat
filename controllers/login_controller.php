@@ -21,7 +21,3 @@ if (isset($_POST['login'])) {
     }
 }
 
-if (isset($_GET['logout'])) {
-    $authentication = new Authentication();
-    $authentication->logout();
-}

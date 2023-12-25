@@ -2,7 +2,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form method="post" action="<?= PATH ?>controllers/login_controller.php">
+<form method="post" action="index.php?page=login">
     <h3>Login Here</h3>
 
     <label for="username">Username</label>
@@ -16,7 +16,7 @@
     </div>
     <div class="social items-center flex-col">
         <p class="text-sm mb-4">Or</p>
-        <a href="<?= PATH ?>index.php?page=register">
+        <a href="index.php?page=register">
             <div class="cursor-pointer">Sign Up</div>
         </a>
     </div>

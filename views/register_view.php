@@ -2,7 +2,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form method="post" action="<?= PATH ?>controllers/register_controller.php" class="register-form" enctype="multipart/form-data">
+<form method="post" action="index.php?page=register" class="register-form" enctype="multipart/form-data">
     <h3>Sign Up Here</h3>
 
     <label>User Picture</label>
@@ -30,7 +30,7 @@
     </div>
     <div class="social items-center flex-col">
         <p class="text-sm mb-4">Or</p>
-        <a href="<?= PATH ?>index.php?page=login">
+        <a href="index.php?page=login">
             <div class="cursor-pointer">Login</div>
         </a>
     </div>

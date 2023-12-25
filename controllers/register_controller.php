@@ -7,7 +7,7 @@ if (isset($_POST['signup'])) {
     extract($_POST);
 
     $password = password_hash($password, PASSWORD_BCRYPT);
-    $targetDir = "../assets/img/";
+    $targetDir = "assets/img/";
     $fileName = basename($_FILES["picture"]["name"]);
     $targetFilePath = $targetDir . $fileName;
 
@@ -19,6 +19,7 @@ if (isset($_POST['signup'])) {
             throw new Exception("User_exist");
         } else {
             User::insertUser($username, $email, $password, $fileName, $db);
+            header('Location: index.php?page=login');
         }
     }
 }
