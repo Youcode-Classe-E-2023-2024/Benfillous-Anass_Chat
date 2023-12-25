@@ -20,3 +20,8 @@ if (isset($_POST["req"]) && $_POST["req"] == "displayRooms") {
     $rooms = Room::getAll();
     echo json_encode($rooms);
 }
+
+if(isset($_POST["roomId"])) {
+    $members = Room::getAllMembers($_POST["roomId"]);
+    echo json_encode($members);
+}
