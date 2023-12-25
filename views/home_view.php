@@ -41,7 +41,7 @@
             </div>
         </div>
         <!-- Chat messages -->
-        <div class="chat-section px-6 py-4 flex-1 overflow-y-scroll">
+        <div id="chat-section" class="px-6 py-4 flex-1 overflow-y-scroll">
             <!-- A message -->
 
             <!-- A message -->
@@ -55,7 +55,7 @@
                                 d="M16 10c0 .553-.048 1-.601 1H11v4.399c0 .552-.447.601-1 .601-.553 0-1-.049-1-.601V11H4.601C4.049 11 4 10.553 4 10c0-.553.049-1 .601-1H9V4.601C9 4.048 9.447 4 10 4c.553 0 1 .048 1 .601V9h4.399c.553 0 .601.447.601 1z"
                                 fill="#FFFFFF"/></svg>
                   </span>
-                <input type="text" class="w-full px-4 bg-gray-600" placeholder="Message #general"/>
+                <input id="message-input" type="text" class="w-full px-4 bg-gray-600" placeholder="Message #general"/>
             </div>
         </div>
     </div>
@@ -96,7 +96,8 @@
 
 
     <!-- Profile -->
-    <div id="profile-section" class="hidden w-full" style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
+    <div id="profile-section" class="hidden w-full"
+         style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
         <div class="z-20 mx-auto bg-gray-500 bg-opacity-50">
             <div class="p-8 shadow mt-24">
                 <div class="grid grid-cols-1 md:grid-cols-3">
@@ -165,151 +166,171 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const memberList = document.getElementById("member-list");
-        const chatContent = document.getElementById("chat-content");
-        const profileSection = document.getElementById("profile-section");
-        const roomForm = document.getElementById("roomForm");
+<script>
+    const memberList = document.getElementById("member-list");
+    const chatContent = document.getElementById("chat-content");
+    const profileSection = document.getElementById("profile-section");
+    const roomForm = document.getElementById("roomForm");
 
-        const myProfile = document.getElementById("myprofile");
-        const rooms = document.querySelectorAll(".rooms");
-        const addRoom = document.getElementById("addRoom");
+    const myProfile = document.getElementById("myprofile");
+    const rooms = document.querySelectorAll(".rooms");
+    const addRoom = document.getElementById("addRoom");
 
-        myProfile.addEventListener("click", () => {
-            memberList.style.display = "none";
-            chatContent.classList.add("hidden");
-            profileSection.classList.remove("hidden");
+    myProfile.addEventListener("click", () => {
+        memberList.style.display = "none";
+        chatContent.classList.add("hidden");
+        profileSection.classList.remove("hidden");
+        roomForm.classList.add("hidden");
+    });
+    rooms.forEach((elm) => {
+        elm.addEventListener("click", () => {
+            memberList.style.display = "";
+            chatContent.classList.remove("hidden");
+            profileSection.classList.add("hidden");
             roomForm.classList.add("hidden");
-            console.log(profileSection.style);
         });
-        rooms.forEach((elm) => {
-            elm.addEventListener("click", () => {
-                memberList.style.display = "";
-                chatContent.classList.remove("hidden");
-                profileSection.classList.add("hidden");
+    });
+
+    addRoom.addEventListener("click", () => {
+        roomForm.classList.toggle("hidden");
+    });
+
+    const addRoomBtn = document.getElementById("addRoomBtn");
+
+    function createRoom(roomName, members) {
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {roomName, members},
+            success: (data) => {
                 roomForm.classList.add("hidden");
-            });
+                displayRooms();
+            }
         });
+    }
 
-        addRoom.addEventListener("click", () => {
-            roomForm.classList.toggle("hidden");
-        });
+    addRoomBtn.addEventListener("click", () => {
+        createRoom($("#roomName").val(), $("#roomMembers").val())
+    })
 
-        const addRoomBtn = document.getElementById("addRoomBtn");
+    const roomsSection = document.getElementById("rooms-section");
+    let defaultRoomId = 0;
 
-        function createRoom(roomName, members) {
-            $.ajax({
-                type: "POST",
-                url: "controllers/home_controller.php",
-                data: {roomName, members},
-                success: (data) => {
-                    roomForm.classList.add("hidden");
-                    displayRooms();
-                }
-            });
-        }
+    function displayRooms() {
+        roomsSection.innerHTML = "";
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {req: "displayRooms"},
+            success: (data) => {
+                console.log(data);
+                let roomsData = JSON.parse(data);
+                roomsData.forEach((room, index) => {
+                    if (index === 0) {
+                        defaultRoomId = room.room_id;
+                    }
 
-        addRoomBtn.addEventListener("click", () => {
-            createRoom($("#roomName").val(), $("#roomMembers").val())
-        })
-
-        const roomsSection = document.getElementById("rooms-section");
-        let defaultRoomId = 0;
-
-        function displayRooms() {
-            roomsSection.innerHTML = "";
-            $.ajax({
-                type: "POST",
-                url: "controllers/home_controller.php",
-                data: {req: "displayRooms"},
-                success: (data) => {
-                    let roomsData = JSON.parse(data);
-
-                    roomsData.forEach((room, index) => {
-                        if (index === 0) {
-                            defaultRoomId = room.room_id;
-                        }
-
-                        // Add a data attribute to store the room information
-                        roomsSection.innerHTML += `
+                    // Add a data attribute to store the room information
+                    roomsSection.innerHTML += `
                         <div class="room cursor-pointer mb-4" data-room-id="${room.room_id}">
                             <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
                                 <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                             </div>
                         </div>
                     `;
-                    });
+                });
 
-                    // Add event listener after rooms are loaded
-                    $(roomsSection).on("click", ".room", function () {
-                        // Access the room information using the data attribute
-                        const roomId = $(this).data("room-id");
+                // Add event listener after rooms are loaded
+                $(roomsSection).on("click", ".room", function () {
+                    // Access the room information using the data attribute
+                    const roomId = $(this).data("room-id");
 
-                        // Now you can use roomId as needed
-                        console.log("Room clicked:", roomId);
+                    // Now you can use roomId as needed
+                    console.log("Room clicked:", roomId);
 
-                        displayRoomMembers(roomId);
-                        memberList.style.display = "";
-                        chatContent.classList.remove("hidden");
-                        profileSection.classList.add("hidden");
-                        roomForm.classList.add("hidden");
-                    });
-                }
-            });
-        }
+                    displayRoomMembers(roomId);
+                    displayChat(roomId);
+
+                    memberList.style.display = "";
+                    chatContent.classList.remove("hidden");
+                    profileSection.classList.add("hidden");
+                    roomForm.classList.add("hidden");
+                });
+            }
+        });
+    }
 
 
-        const membersSection = document.getElementById("members-section");
+    const membersSection = document.getElementById("members-section");
 
-        function displayRoomMembers(roomId) {
-            membersSection.innerHTML = "";
-            $.ajax({
-                type: "POST",
-                url: "controllers/home_controller.php",
-                data: {roomId},
-                success: (data) => {
-                    membersData = JSON.parse(data);
-                    membersData.forEach((member) => {
-                        membersSection.innerHTML += `<div class="py-4 flex border-b border-gray-600">
+    function displayRoomMembers(roomId) {
+        membersSection.innerHTML = "";
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {
+                roomId,
+                members: 1
+            },
+            success: (data) => {
+                let membersData = JSON.parse(data);
+                membersData.forEach((member) => {
+                    membersSection.innerHTML += `<div class="py-4 flex border-b border-gray-600">
                         <img src="${member.picture}"
                         class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
                         <span class="font-bold text-red-300 cursor-pointer hover:underline">${member.username}</span></div>`;
-                    })
-                }
-            })
-        }
+                })
+            }
+        })
+    }
 
-        let chatSection = document.getElementById("chat-section");
+    const chatSection = document.getElementById("chat-section");
 
-        function displayChat(roomId) {
-            chatSection.innerHTML = "";
-            $.ajax({
-                type: "POST",
-                url: "controllers/home_controller.php",
-                data: {roomId},
-                success: (data) => {
-                    let chatData = JSON.parse(data);
-                    chatData.forEach((message) => {
-                        chatSection.innerHTML += `
-                             <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
-                                <img src="https://cdn.discordapp.com/embed/avatars/3.png"
-                                     class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
-                                <div class="flex-1 overflow-hidden">
-                                    <div>
-                                        <span class="font-bold text-red-300 cursor-pointer hover:underline">message.username</span>
-                                        <span class="font-bold text-gray-400 text-xs">09:24</span>
+            function displayChat(roomId) {
+                chatSection.innerHTML = "";
+                $.ajax({
+                    type: "POST",
+                    url: "controllers/home_controller.php",
+                    data: {roomId, chat: 1},
+                    success: (data) => {
+                        let chatData = JSON.parse(data);
+                        chatData.forEach((message) => {
+                            chatSection.innerHTML += `
+                                 <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
+                                    <img src="https://cdn.discordapp.com/embed/avatars/3.png"
+                                         class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
+                                    <div class="flex-1 overflow-hidden">
+                                        <div>
+                                            <span class="font-bold text-red-300 cursor-pointer hover:underline">${message.username}</span>
+                                            <span class="font-bold text-gray-400 text-xs">09:24</span>
+                                        </div>
+                                        <p class="text-white leading-normal">${message.message}</p>
                                     </div>
-                                    <p class="text-white leading-normal">message.message</p>
-                                </div>
-                            </div>`;
-                    })
-                }
-            })
-        }
-
-        displayRooms();
-        displayRoomMembers(defaultRoomId);
+                                </div>`;
+                        })
+                    }
+                })
+            }
 
 
-    </script>
+            const chatInput = document.getElementById("chat-input");
+            function writeChat(roomId, message) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "controllers/home_controller.php",
+                    data: {roomId, message},
+                    success: (response) => {
+                        console.log(response);
+                    }
+                })
+
+            }
+
+    displayRooms();
+            displayRoomMembers(defaultRoomId);
+            displayChat(defaultRoomId);
+
+</script>

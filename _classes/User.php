@@ -10,7 +10,7 @@ class User
     {
         global $db;
 
-        $result = $db->query("SELECT * FROM users WHERE users_id = '$id'");
+        $result = $db->query("SELECT * FROM user WHERE user_id = '$id'");
 
         $user = $result->fetch_assoc();
 
