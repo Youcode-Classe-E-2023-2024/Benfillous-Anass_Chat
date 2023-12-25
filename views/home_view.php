@@ -42,21 +42,12 @@
             </div>
         </div>
         <!-- Chat messages -->
-        <div class="px-6 py-4 flex-1 overflow-y-scroll">
+        <div class="chat-section px-6 py-4 flex-1 overflow-y-scroll">
             <!-- A message -->
-            <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
-                <img src="https://cdn.discordapp.com/embed/avatars/3.png"
-                     class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
-                <div class="flex-1 overflow-hidden">
-                    <div>
-                        <span class="font-bold text-red-300 cursor-pointer hover:underline">User</span>
-                        <span class="font-bold text-gray-400 text-xs">09:24</span>
-                    </div>
-                    <p class="text-white leading-normal">Discord is awesome!</p>
-                </div>
-            </div>
+
             <!-- A message -->
         </div>
+
         <div class="pb-6 px-4 flex-none">
             <div class="flex rounded-lg overflow-hidden">
 										<span class="text-3xl text-grey border-r-4 border-gray-600 bg-gray-600 p-2">
@@ -69,6 +60,7 @@
             </div>
         </div>
     </div>
+
     <!-- Members List -->
     <div id="member-list" class="bg-gray-800 text-purple-lighter flex-none w-64 pb-6 md:block">
         <div
@@ -226,7 +218,7 @@
                 url: "controllers/home_controller.php",
                 data: {req: "displayRooms"},
                 success: (data) => {
-                    roomsData = JSON.parse(data);
+                    let roomsData = JSON.parse(data);
 
                     roomsData.forEach((room, index) => {
                         if(index === 0) {
@@ -282,6 +274,33 @@
             })
         }
 
+        let chatSection = document.getElementById("chat-section");
+
+        function displayChat(roomId) {
+            chatSection.innerHTML = "";
+            $.ajax({
+                type: "POST",
+                url: "controllers/home_controller.php",
+                data: {roomId},
+                success: (data) => {
+                    let chatData = JSON.parse(data);
+                    chatData.forEach((message) => {
+                        chatSection.innerHTML += `
+                             <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
+                                <img src="https://cdn.discordapp.com/embed/avatars/3.png"
+                                     class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
+                                <div class="flex-1 overflow-hidden">
+                                    <div>
+                                        <span class="font-bold text-red-300 cursor-pointer hover:underline">message.username</span>
+                                        <span class="font-bold text-gray-400 text-xs">09:24</span>
+                                    </div>
+                                    <p class="text-white leading-normal">message.message</p>
+                                </div>
+                            </div>`;
+                    })
+                }
+            })
+        }
 
         displayRooms();
         displayRoomMembers(defaultRoomId);
