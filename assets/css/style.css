@@ -174,3 +174,7 @@ button {
 .register-form {
     height: 750px;
 }
+
+#profile-section {
+    background: url("../img/online-chat-rooms.webp");
+}

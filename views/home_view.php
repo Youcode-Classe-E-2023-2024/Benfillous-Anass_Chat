@@ -1,7 +1,6 @@
 <!-- component -->
 <!-- Inspired by slack ui clone https://tailwindcomponents.com/component/slack-clone-1 -->
-
-<div class="font-sans antialiased h-screen flex">
+<div class="font-sans antialiased h-screen bg-transparent flex">
     <!-- Sidebar / channel list -->
     <div class="bg-gray-900 text-purple-lighter flex-none w-24 p-6 md:block">
         <div id="myprofile" class="cursor-pointer mb-4 border-b border-gray-600 pb-2">
@@ -93,9 +92,13 @@
             </div>
         </div>
 
-        <!-- Profile -->
-        <div id="profile-section" class="hidden mx-auto">
-            <div class="p-8 bg-gray-700 shadow mt-24">
+    </div>
+
+
+    <!-- Profile -->
+    <div id="profile-section" class="hidden w-full" style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
+        <div class="z-20 mx-auto bg-gray-500 bg-opacity-50">
+            <div class="p-8 shadow mt-24">
                 <div class="grid grid-cols-1 md:grid-cols-3">
                     <div class="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
                         <div><p class="font-bold text-gray-700 text-xl">22</p>
@@ -131,30 +134,33 @@
                     <p class="mt-2 text-white-500">University of Computer Science</p></div>
             </div>
         </div>
+    </div>
 
-        <!-- Room Creation -->
-        <div id="roomForm" class="absolute top-1/4 left-1/3 hidden mt-2">
-            <div class="bg-gray-900 text-purple-lighter p-4 rounded">
-                <div class="mb-2">
-                    <label for="roomName" class="text-white">Room Name</label>
-                    <input type="text" id="roomName"
-                           class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"
-                           placeholder="Room Name"/>
-                </div>
-                <div class="mb-2">
-                    <label for="roomMembers" class="text-white">Room Members</label>
-                    <select id="roomMembers" multiple name="room-members[]"
-                            class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
-                        <?php foreach ($users as $user) { ?>
+    <!-- Room Creation -->
+    <div id="roomForm" class="absolute top-1/4 left-1/3 hidden mt-2">
+        <div class="bg-gray-900 text-purple-lighter p-4 rounded">
+            <div class="mb-2">
+                <label for="roomName" class="text-white">Room Name</label>
+                <input type="text" id="roomName"
+                       class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"
+                       placeholder="Room Name"/>
+            </div>
+            <div class="mb-2">
+                <label for="roomMembers" class="text-white">Room Members</label>
+                <select id="roomMembers" multiple name="room-members[]"
+                        class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
+                    <?php foreach ($users as $user) {
+                        if ($user["user_id"] != $_SESSION["user_id"]) {
+                            ?>
                             <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mt-8 cursor-pointer text-center">
-                    <div id="addRoomBtn"
-                         class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
-                        Add New Room
-                    </div>
+                        <?php }
+                    } ?>
+                </select>
+            </div>
+            <div class="mt-8 cursor-pointer text-center">
+                <div id="addRoomBtn"
+                     class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
+                    Add New Room
                 </div>
             </div>
         </div>
@@ -170,12 +176,12 @@
         const rooms = document.querySelectorAll(".rooms");
         const addRoom = document.getElementById("addRoom");
 
-
         myProfile.addEventListener("click", () => {
             memberList.style.display = "none";
             chatContent.classList.add("hidden");
             profileSection.classList.remove("hidden");
             roomForm.classList.add("hidden");
+            console.log(profileSection.style);
         });
         rooms.forEach((elm) => {
             elm.addEventListener("click", () => {
@@ -221,7 +227,7 @@
                     let roomsData = JSON.parse(data);
 
                     roomsData.forEach((room, index) => {
-                        if(index === 0) {
+                        if (index === 0) {
                             defaultRoomId = room.room_id;
                         }
 

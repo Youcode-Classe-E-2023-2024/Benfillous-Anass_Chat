@@ -23,7 +23,6 @@ if (!isset($_SESSION["login"])) {
 } else {
     $page = 'home';
 }
-
 $all_pages = scandir('controllers');
 
 if (in_array($page . '_controller.php', $all_pages)) {
@@ -33,3 +32,4 @@ if (in_array($page . '_controller.php', $all_pages)) {
 } else {
     header('Location: 404.html');
 }
+
