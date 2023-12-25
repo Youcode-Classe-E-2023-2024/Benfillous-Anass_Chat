@@ -2,7 +2,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form method="post" action="index.php?page=login">
+<form method="post" action="index.php?page=login" class="form">
     <h3>Login Here</h3>
 
     <label for="username">Username</label>

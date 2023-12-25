@@ -2,7 +2,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form method="post" action="index.php?page=register" class="register-form" enctype="multipart/form-data">
+<form method="post" action="index.php?page=register" class="form register-form" enctype="multipart/form-data">
     <h3>Sign Up Here</h3>
 
     <label>User Picture</label>

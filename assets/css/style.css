@@ -76,7 +76,7 @@ body {
 }
 
 
-form {
+.form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -177,4 +177,9 @@ button {
 
 #profile-section {
     background: url("../img/online-chat-rooms.webp");
+}
+
+.logout-form {
+    height: 20px !important;
+    width: 20px !important;
 }

@@ -25,10 +25,13 @@
                 </svg>
             </div>
         </div>
-        <a href="<?= PATH ?>controllers/login_controller.php?logout=true"
-           class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
-            Logout
-        </a>
+        <form
+              method="post" action="index.php?page=home" class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
+            <button name="logout">
+                Logout
+            </button>
+        </form>
+
     </div>
 
     <!-- Chat content -->
@@ -47,6 +50,7 @@
             <!-- A message -->
         </div>
 
+        <!-- A message input -->
         <div class="pb-6 px-4 flex-none">
             <div class="flex rounded-lg overflow-hidden">
 										<span class="text-3xl text-grey border-r-4 border-gray-600 bg-gray-600 p-2">
@@ -55,9 +59,10 @@
                                 d="M16 10c0 .553-.048 1-.601 1H11v4.399c0 .552-.447.601-1 .601-.553 0-1-.049-1-.601V11H4.601C4.049 11 4 10.553 4 10c0-.553.049-1 .601-1H9V4.601C9 4.048 9.447 4 10 4c.553 0 1 .048 1 .601V9h4.399c.553 0 .601.447.601 1z"
                                 fill="#FFFFFF"/></svg>
                   </span>
-                <input id="message-input" type="text" class="w-full px-4 bg-gray-600" placeholder="Message #general"/>
+                <input id="message-input" type="text" class="w-full px-4 bg-gray-600" placeholder="Message"/>
             </div>
         </div>
+        <!-- A message input -->
     </div>
 
     <!-- Members List -->
@@ -218,13 +223,15 @@
     const roomsSection = document.getElementById("rooms-section");
     let defaultRoomId = 0;
 
+    const chatInput = document.getElementById("message-input");
+
     function displayRooms() {
         roomsSection.innerHTML = "";
         $.ajax({
             type: "POST",
             url: "controllers/home_controller.php",
             data: {req: "displayRooms"},
-            success: (data) => {
+            success: function (data)  {
                 console.log(data);
                 let roomsData = JSON.parse(data);
                 roomsData.forEach((room, index) => {
@@ -252,6 +259,12 @@
 
                     displayRoomMembers(roomId);
                     displayChat(roomId);
+                    chatInput.addEventListener("keypress", function (event) {
+                        // If the user presses the "Enter" key on the keyboard
+                        if (event.key === "Enter") {
+                            writeChat(roomId, chatInput.value);
+                        }
+                    });
 
                     memberList.style.display = "";
                     chatContent.classList.remove("hidden");
@@ -288,16 +301,16 @@
 
     const chatSection = document.getElementById("chat-section");
 
-            function displayChat(roomId) {
-                chatSection.innerHTML = "";
-                $.ajax({
-                    type: "POST",
-                    url: "controllers/home_controller.php",
-                    data: {roomId, chat: 1},
-                    success: (data) => {
-                        let chatData = JSON.parse(data);
-                        chatData.forEach((message) => {
-                            chatSection.innerHTML += `
+    function displayChat(roomId) {
+        chatSection.innerHTML = "";
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {roomId, chat: 1},
+            success: (data) => {
+                let chatData = JSON.parse(data);
+                chatData.forEach((message) => {
+                    chatSection.innerHTML += `
                                  <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
                                     <img src="https://cdn.discordapp.com/embed/avatars/3.png"
                                          class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
@@ -309,28 +322,26 @@
                                         <p class="text-white leading-normal">${message.message}</p>
                                     </div>
                                 </div>`;
-                        })
-                    }
                 })
             }
+        })
+    }
 
+    function writeChat(roomId, message) {
 
-            const chatInput = document.getElementById("chat-input");
-            function writeChat(roomId, message) {
-
-                $.ajax({
-                    type: "POST",
-                    url: "controllers/home_controller.php",
-                    data: {roomId, message},
-                    success: (response) => {
-                        console.log(response);
-                    }
-                })
-
+        $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {roomId, message},
+            success: (response) => {
+                console.log(response);
+                chatInput.value = "";
             }
+        })
+
+    }
 
     displayRooms();
-            displayRoomMembers(defaultRoomId);
-            displayChat(defaultRoomId);
+    displayRoomMembers(defaultRoomId);
 
 </script>
