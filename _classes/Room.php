@@ -8,6 +8,7 @@ class Room {
         mysqli_stmt_execute($stmt);
         $roomId = mysqli_insert_id($db);
 
+        $this->insertMember($roomId, $creator, $db);
         foreach ($members as $member) {
             $this->insertMember($roomId, $member, $db);
         }
@@ -26,6 +27,18 @@ class Room {
     {
         global $db;
         $result = $db->query("SELECT * FROM room");
+        if ($result)
+            return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    static function getAllMembers($room_id)
+    {
+        global $db;
+        $result = $db->query("
+            SELECT user.* FROM room_member
+            JOIN user ON room_member.user_id = user.user_id
+            WHERE room_member.room_id = '$room_id'
+        ");
+
         if ($result)
             return $result->fetch_all(MYSQLI_ASSOC);
     }
