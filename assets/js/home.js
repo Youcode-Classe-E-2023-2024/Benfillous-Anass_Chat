@@ -92,7 +92,6 @@ function displayRooms() {
 
                 displayRoomMembers(currentRoom);
                 displayChat(currentRoom);
-                console.log("zbi");
                 memberList.style.display = "";
                 chatContent.classList.remove("hidden");
                 profileSection.classList.add("hidden");
