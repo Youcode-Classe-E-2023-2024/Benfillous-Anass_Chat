@@ -3,6 +3,7 @@ class User
 {
     public $id;
     public $email;
+    public $picture;
     public $username;
     private $password;
 
@@ -14,10 +15,11 @@ class User
 
         $user = $result->fetch_assoc();
 
-        $this->id = $user['users_id'];
-        $this->email = $user['users_email'];
-        $this->username = $user['users_username'];
-        $this->password = $user['users_password'];
+        $this->id = $user['user_id'];
+        $this->picture = $user['picture'];
+        $this->email = $user['email'];
+        $this->username = $user['username'];
+        $this->password = $user['password'];
     }
 
     static function getAll()

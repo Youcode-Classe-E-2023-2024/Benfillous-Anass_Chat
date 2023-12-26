@@ -6,6 +6,8 @@ if (file_exists('../_classes/Room.php')) {
     session_start();
 }
 
+$user = new User($_SESSION["user_id"]);
+
 if (isset($_POST["roomName"])) {
     extract($_POST);
 
