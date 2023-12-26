@@ -10,6 +10,7 @@
             </div>
         </div>
 
+        <!--room section-->
         <div class="overflow-y-auto h-[500px] mb-3 w-24">
             <div id="rooms-section">
             </div>
@@ -103,7 +104,7 @@
 
     <!-- Profile -->
     <div id="profile-section" class="hidden w-full"
-         style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
+         style="background: url('<?= PATH ?>assets/img/online-chat-rooms.jpg')">
         <div class="z-20 mx-auto bg-gray-500 bg-opacity-50">
             <div class="p-8 shadow mt-24">
                 <div class="grid grid-cols-1 md:grid-cols-3">
@@ -117,11 +118,12 @@
                     </div>
                     <div class="relative">
                         <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" viewBox="0 0 20 20"
+                            <!--<svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" viewBox="0 0 20 20"
                                  fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                       clip-rule="evenodd"/>
-                            </svg>
+                            </svg>-->
+                            <img class="h-full w-full rounded-full" src="assets/img/<?= $user->picture ?>">
                         </div>
                     </div>
                     <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
@@ -174,214 +176,4 @@
     </div>
 </div>
 
-<script>
-    const memberList = document.getElementById("member-list");
-    const chatContent = document.getElementById("chat-content");
-    const profileSection = document.getElementById("profile-section");
-    const roomForm = document.getElementById("roomForm");
-
-    const myProfile = document.getElementById("myprofile");
-    const rooms = document.querySelectorAll(".rooms");
-    const addRoom = document.getElementById("addRoom");
-
-    myProfile.addEventListener("click", () => {
-        memberList.style.display = "none";
-        chatContent.classList.add("hidden");
-        profileSection.classList.remove("hidden");
-        roomForm.classList.add("hidden");
-    });
-    rooms.forEach((elm) => {
-        elm.addEventListener("click", () => {
-            memberList.style.display = "";
-            chatContent.classList.remove("hidden");
-            profileSection.classList.add("hidden");
-            roomForm.classList.add("hidden");
-        });
-    });
-
-    addRoom.addEventListener("click", () => {
-        roomForm.classList.toggle("hidden");
-    });
-
-    const addRoomBtn = document.getElementById("addRoomBtn");
-
-    function createRoom(roomName, members) {
-        $.ajax({
-            type: "POST",
-            url: "controllers/home_controller.php",
-            data: {roomName, members},
-            success: (data) => {
-                roomForm.classList.add("hidden");
-                displayRooms();
-            }
-        });
-    }
-
-    addRoomBtn.addEventListener("click", () => {
-        if ($("#roomName").val() == "")
-            createRoom($("#roomName").val(), $("#roomMembers").val())
-    })
-
-    const roomsSection = document.getElementById("rooms-section");
-    let defaultRoomId = 0;
-
-    const chatInput = document.getElementById("message-input");
-    let currentRoom = 0;
-
-    function displayRooms() {
-        roomsSection.innerHTML = "";
-        $.ajax({
-            type: "POST",
-            url: "controllers/home_controller.php",
-            data: {req: "displayRooms"},
-            success: function (data) {
-                let roomsData = JSON.parse(data);
-                roomsData.forEach((room, index) => {
-                    if (index === 0) {
-                        defaultRoomId = room.room_id;
-                    }
-
-                    // Add a data attribute to store the room information
-                    roomsSection.innerHTML += `
-                        <div class="room cursor-pointer mb-4 relative" data-room-id="${room.room_id}">
-                            <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
-                                <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
-                            </div>
-                            <div class="absolute hidden room-popup bg-white p-2 text-black text-sm font-semibold rounded shadow-md -mt-10 -ml-2" style="bottom: 20px; left: 20px;">
-                                ${room.room_name}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                // Add event listener after rooms are loaded
-                $("#rooms-section").off("click", ".room").on("click", ".room", function () {
-                    // Access the room information using the data attribute
-                    const roomId = $(this).data("room-id");
-
-                    // Now you can use roomId as needed
-                    console.log("Room clicked:", roomId);
-                    currentRoom = roomId;
-
-                    displayRoomMembers(currentRoom);
-                    displayChat(currentRoom);
-                    console.log("zbi");
-                    memberList.style.display = "";
-                    chatContent.classList.remove("hidden");
-                    profileSection.classList.add("hidden");
-                    roomForm.classList.add("hidden");
-                });
-                document.querySelectorAll('.room').forEach((room) => {
-                    room.addEventListener('mouseenter', () => {
-                        room.querySelector('.room-popup').classList.remove('hidden');
-                    });
-
-                    room.addEventListener('mouseleave', () => {
-                        room.querySelector('.room-popup').classList.add('hidden');
-                    });
-                });
-            }
-        });
-    }
-
-
-    const membersSection = document.getElementById("members-section");
-
-    function displayRoomMembers(roomId) {
-        membersSection.innerHTML = "";
-        $.ajax({
-            type: "POST",
-            url: "controllers/home_controller.php",
-            data: {
-                roomId,
-                members: 1
-            },
-            success: (data) => {
-                let membersData = JSON.parse(data);
-                console.log(membersData);
-                membersData.forEach((member) => {
-                    membersSection.innerHTML += `<div class="py-4 flex border-b border-gray-600">
-                        <img src="assets/img/${member.picture}"
-                        class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
-                        <span class="font-bold text-red-300 cursor-pointer hover:underline">${member.username}</span></div>`;
-                })
-            }
-        })
-    }
-
-    const chatSection = document.getElementById("chat-section");
-
-    function displayChat(roomId) {
-        chatSection.innerHTML = "";
-        $.ajax({
-            type: "POST",
-            url: "controllers/home_controller.php",
-            data: {roomId, chat: 1},
-            success: (data) => {
-                let chatData = JSON.parse(data);
-                chatData.forEach((message) => {
-                    let date = formatTimestamp(message.date);
-                    chatSection.innerHTML += `
-                                 <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
-                                    <img src="assets/img/${message.picture}"
-                                         class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
-                                    <div class="flex-1 overflow-hidden">
-                                        <div>
-                                            <span class="font-bold text-red-300 cursor-pointer hover:underline">${message.username}</span>
-                                            <span class="font-bold text-gray-400 text-xs">${date}</span>
-                                        </div>
-                                        <p class="text-white leading-normal">${message.message}</p>
-                                    </div>
-                                </div>`;
-                })
-                chatSection.scrollTop = chatSection.scrollHeight;
-            }
-        })
-    }
-
-    function writeChat(roomId, message) {
-        $.ajax({
-            type: "POST",
-            url: "controllers/home_controller.php",
-            data: {roomId, message},
-            success: (response) => {
-                console.log(response);
-                chatInput.value = "";
-                displayChat(roomId);
-                console.log(roomId, message);
-            }
-        })
-
-    }
-
-    displayRooms();
-
-    chatInput.addEventListener("keypress", function (event) {
-        // If the user presses the "Enter" key on the keyboard
-        if (event.key === "Enter") {
-            writeChat(currentRoom, chatInput.value);
-        }
-    });
-
-
-    function formatTimestamp(timestamp) {
-        // Convert timestamp to milliseconds
-        const date = new Date(timestamp * 1000);
-
-        // Extract components
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are zero-based
-        const year = date.getFullYear();
-
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-
-        // Check if it's a full date or just time
-        if (day !== 1 || month !== 1 || year !== 1970) {
-            return `${day}/${month < 10 ? '0' : ''}${month}/${year}, ${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-        } else {
-            return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-        }
-    }
-
-</script>
+<script src="assets/js/home.js"></script>
