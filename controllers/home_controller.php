@@ -3,6 +3,7 @@ if (file_exists('../_config/db.php'))
     include_once '../_config/db.php';
 if (file_exists('../_classes/Room.php')) {
     include_once '../_classes/Room.php';
+    session_start();
 }
 
 if (isset($_POST["roomName"])) {
@@ -35,7 +36,12 @@ if (isset($_POST["chat"])) {
 if (isset($_POST["message"])) {
     extract($_POST);
     $creator = $_SESSION["user_id"];
-    $date = $date("U");
+    $date = date("U");
     Room::insertMesaage($roomId, $creator, $message, $date, $db);
     exit;
+}
+
+if (isset($_POST['logout'])) {
+    $authentication = new Authentication();
+    $authentication->logout();
 }

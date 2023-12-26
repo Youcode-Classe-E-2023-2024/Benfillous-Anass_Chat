@@ -26,7 +26,8 @@
             </div>
         </div>
         <form
-              method="post" action="index.php?page=home" class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
+                method="post" action="index.php?page=home"
+                class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
             <button name="logout">
                 Logout
             </button>
@@ -217,6 +218,7 @@
     }
 
     addRoomBtn.addEventListener("click", () => {
+        if ($("#roomName").val())
         createRoom($("#roomName").val(), $("#roomMembers").val())
     })
 
@@ -224,15 +226,14 @@
     let defaultRoomId = 0;
 
     const chatInput = document.getElementById("message-input");
-
+    let currentRoom = 0;
     function displayRooms() {
         roomsSection.innerHTML = "";
         $.ajax({
             type: "POST",
             url: "controllers/home_controller.php",
             data: {req: "displayRooms"},
-            success: function (data)  {
-                console.log(data);
+            success: function (data) {
                 let roomsData = JSON.parse(data);
                 roomsData.forEach((room, index) => {
                     if (index === 0) {
@@ -245,31 +246,38 @@
                             <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
                                 <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                             </div>
+                            <div class="absolute hidden room-popup bg-white p-2 text-black text-sm font-semibold rounded shadow-md -mt-10 -ml-2">
+                                ${room.room_id}
+                            </div>
                         </div>
                     `;
                 });
 
                 // Add event listener after rooms are loaded
-                $(roomsSection).on("click", ".room", function () {
+                $("#rooms-section").off("click", ".room").on("click", ".room", function () {
                     // Access the room information using the data attribute
                     const roomId = $(this).data("room-id");
 
                     // Now you can use roomId as needed
                     console.log("Room clicked:", roomId);
+                    currentRoom = roomId;
 
-                    displayRoomMembers(roomId);
-                    displayChat(roomId);
-                    chatInput.addEventListener("keypress", function (event) {
-                        // If the user presses the "Enter" key on the keyboard
-                        if (event.key === "Enter") {
-                            writeChat(roomId, chatInput.value);
-                        }
-                    });
-
+                    displayRoomMembers(currentRoom);
+                    displayChat(currentRoom);
+                    console.log("zbi");
                     memberList.style.display = "";
                     chatContent.classList.remove("hidden");
                     profileSection.classList.add("hidden");
                     roomForm.classList.add("hidden");
+                });
+                document.querySelectorAll('.room').forEach((room) => {
+                    room.addEventListener('mouseenter', () => {
+                        room.querySelector('.room-popup').classList.remove('hidden');
+                    });
+
+                    room.addEventListener('mouseleave', () => {
+                        room.querySelector('.room-popup').classList.add('hidden');
+                    });
                 });
             }
         });
@@ -289,6 +297,7 @@
             },
             success: (data) => {
                 let membersData = JSON.parse(data);
+                console.log(membersData);
                 membersData.forEach((member) => {
                     membersSection.innerHTML += `<div class="py-4 flex border-b border-gray-600">
                         <img src="${member.picture}"
@@ -323,6 +332,7 @@
                                     </div>
                                 </div>`;
                 })
+                chatSection.scrollTop = chatSection.scrollHeight;
             }
         })
     }
@@ -336,12 +346,20 @@
             success: (response) => {
                 console.log(response);
                 chatInput.value = "";
+                displayChat(roomId);
+                console.log(roomId, message);
             }
         })
 
     }
 
     displayRooms();
-    displayRoomMembers(defaultRoomId);
+
+    chatInput.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            writeChat(currentRoom, chatInput.value);
+        }
+    });
 
 </script>

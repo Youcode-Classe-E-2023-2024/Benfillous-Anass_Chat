@@ -23,11 +23,11 @@ class Room {
         mysqli_stmt_execute($stmt);
     }
 
-    function insertMesaage($roomId, $member, $message, $date, $db) {
+    static function insertMesaage($roomId, $member, $message, $date, $db) {
         $sql = "INSERT INTO message (room_id, user_id, message, date) VALUES (?,?,?,?)";
         $stmt = mysqli_stmt_init($db);
         mysqli_stmt_prepare($stmt, $sql);
-        mysqli_stmt_bind_param($stmt, "ii", $roomId, $member, $message, $date);
+        mysqli_stmt_bind_param($stmt, "iisi", $roomId, $member, $message, $date);
         mysqli_stmt_execute($stmt);
     }
 
@@ -58,7 +58,7 @@ class Room {
         $result = $db->query("
             SELECT user.*, message.* FROM message
             JOIN user ON message.user_id = user.user_id
-            WHERE message.room_id = '$room_id'
+            WHERE message.room_id = '$room_id' ORDER BY message.message_id ASC
         ");
 
         if ($result)
