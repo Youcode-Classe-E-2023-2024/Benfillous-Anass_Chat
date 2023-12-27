@@ -37,7 +37,8 @@ class Room
         mysqli_stmt_execute($stmt);
     }
 
-    static function displayInvitation($user, $db) {
+    static function displayInvitation($user, $db)
+    {
         $result = $db->query("
             SELECT room_invitation.invitation_id, room.*, user.username, user.picture FROM room_invitation
             JOIN room ON room_invitation.room_id = room.room_id
@@ -92,16 +93,25 @@ class Room
             return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    static function removeInvitation($table, $invitationId) {
+    static function banMember($room, $member)
+    {
+        global $db;
+        $sql = "UPDATE room_member SET banned=1 WHERE room_id=? AND user_id=?";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql;
+        mysqli_stmt_bind_param($stmt, 'ii', $room, $member);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+
+    static function removeInvitation($table, $invitationId)
+    {
         global $db;
         $sql = "DELETE FROM $table WHERE  invitation_id=?";
         $stmt = mysqli_stmt_init($db);
-        if (mysqli_stmt_prepare($stmt, $sql)) {
-            mysqli_stmt_bind_param($stmt, 'i', $invitationId);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
-        } else {
-            echo "Error: " . mysqli_error($db);
-        }
+        mysqli_stmt_prepare($stmt, $sql;
+        mysqli_stmt_bind_param($stmt, 'i', $invitationId);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
     }
 }
