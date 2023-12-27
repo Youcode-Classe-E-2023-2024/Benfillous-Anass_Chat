@@ -43,6 +43,40 @@ if (isset($_POST["message"])) {
     exit;
 }
 
+if (isset($_POST["membersArray"])) {
+    extract($_POST);
+    $room = new Room();
+    $sender = $_SESSION["user_id"];
+    foreach ($membersArray as $member) {
+        $room->insertMemberRequest($_POST["currentRoom"], $sender, $member, $db);
+    }
+    exit;
+}
+
+if (isset($_POST["req"]) && $_POST["req"] == "displayInvite") {
+    $receiver = $_SESSION["user_id"];
+    $roomInvite = Room::displayInvitation($receiver, $db);
+    echo json_encode($roomInvite);
+    exit;
+}
+
+
+if (isset($_POST["acceptRoomInvitation"])) {
+    extract($_POST);
+    $room = new Room();
+    $receiver = $_SESSION["user_id"];
+    $room->insertMember($roomInvitationRoomId, $receiver, $db);
+    Room::removeInvitation("room_invitation", $roomInvitationId);
+    exit;
+}
+
+if (isset($_POST["rejectRoomInvitation"])) {
+    extract($_POST);
+    Room::removeInvitation("room_invitation", $roomInvitationId);
+    exit;
+}
+
+
 if (isset($_POST['logout'])) {
     $authentication = new Authentication();
     $authentication->logout();

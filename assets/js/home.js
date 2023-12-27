@@ -54,10 +54,13 @@ let defaultRoomId = 0;
 
 const chatInput = document.getElementById("message-input");
 let currentRoom = 0;
+const dropDownBtn = document.getElementById("dropBtn");
+const dropDownContainer = document.getElementById("dropDownContainer");
 
-async function displayRooms() {
+
+function displayRooms() {
     roomsSection.innerHTML = "";
-    await $.ajax({
+    $.ajax({
         type: "POST",
         url: "controllers/home_controller.php",
         data: {req: "displayRooms"},
@@ -70,7 +73,7 @@ async function displayRooms() {
 
                 // Add a data attribute to store the room information
                 roomsSection.innerHTML += `
-                        <div class="room cursor-pointer mb-4 relative" data-room-id="${room.room_id}">
+                        <div class="room cursor-pointer mb-4 relative" data-room-name="${room.room_name}" data-room-id="${room.room_id}">
                             <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
                                 <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                             </div>
@@ -81,15 +84,13 @@ async function displayRooms() {
                     `;
             });
 
-            // Add event listener after rooms are loaded
             $("#rooms-section").off("click", ".room").on("click", ".room", function () {
-                // Access the room information using the data attribute
                 const roomId = $(this).data("room-id");
-
-                // Now you can use roomId as needed
+                const roomName = $(this).data("room-name");
+                dropDownContainer.classList.remove("hidden");
                 console.log("Room clicked:", roomId);
                 currentRoom = roomId;
-
+                dropDownBtn.innerText = roomName + "'s Room";
                 displayRoomMembers(currentRoom);
                 displayChat(currentRoom);
                 memberList.style.display = "";
@@ -137,10 +138,10 @@ function displayRoomMembers(roomId) {
 
 const chatSection = document.getElementById("chat-section");
 
-async function displayChat(roomId) {
+function displayChat(roomId) {
     console.log("Before displayRooms AJAX");
     chatSection.innerHTML = "";
-    await $.ajax({
+    $.ajax({
             type: "POST",
             url: "controllers/home_controller.php",
             data: {roomId, chat: 1},
@@ -183,10 +184,11 @@ function writeChat(roomId, message) {
 
 }
 
+displayRooms();
 
-setInterval(intervalDisplay, 2000);
+/*setInterval(intervalDisplay, 2000);*/
 
-let isFetchingData = false;
+/*let isFetchingData = false;
 
 async function intervalDisplay() {
     if (!isFetchingData) {
@@ -202,7 +204,7 @@ async function intervalDisplay() {
             isFetchingData = false;
         }
     }
-}
+}*/
 
 chatInput.addEventListener("keypress", function (event) {
     // If the user presses the "Enter" key on the keyboard
@@ -231,3 +233,120 @@ function formatTimestamp(timestamp) {
         return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
     }
 }
+
+const displayMembersAdding = document.getElementById("addMemberBtn");
+const membersForm = document.getElementById("membersForm");
+
+
+const addNewMemberBtn = document.getElementById("addNewMemberBtn");
+
+displayMembersAdding.addEventListener("click", (event) => {
+    membersForm.classList.remove("hidden");
+    event.stopPropagation(); // Prevent the click event from reaching the document click listener immediately
+});
+
+
+document.addEventListener("click", (event) => {
+    console.log("clicked");
+    if (!membersForm.contains(event.target) && event.target !== displayMembersAdding) {
+        membersForm.classList.add("hidden");
+    }
+});
+addNewMemberBtn.addEventListener("click", () => {
+    const membersArray = $("#inviteRoomMembers").val();
+    if (membersArray.length !== 0) {
+        addMembers(membersArray);
+    }
+})
+
+function addMembers(membersArray) {
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {currentRoom, membersArray},
+        success: (data) => {
+            membersForm.classList.add("hidden");
+            displayRooms();
+        }
+    });
+}
+
+const roomInviteSection = document.getElementById("room-invite");
+let roomInvitationId;
+let roomInvitationRoomId;
+
+function displayRoomInvitation() {
+
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {req: "displayInvite"},
+        success: (data) => {
+            roomInviteSection.innerHTML = "";
+            let invitationData = JSON.parse(data);
+            invitationData.forEach((invitation) => {
+                roomInviteSection.innerHTML += `
+                                        <div data-invitation-id="${invitation.invitation_id}" data-invitation-room-id="${invitation.room_id}" class="invite">
+                                            <p class="text-gray-700">${invitation.username} invite You to Room ${invitation.room_name}</p>
+                                            <div class="flex flex-row">
+                                                <button type="button"
+                                                        class="accept-invvitation bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
+                                                    Accept
+                                                </button>
+                                                <button type="button"
+                                                        class="reject-invvitation bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300">
+                                                    reject
+                                                </button>
+                                            </div>
+                                            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+                                        </div>`;
+            })
+
+            let invitationElm;
+            $("#room-invite").off("click", ".invite").on("click", ".invite", function () {
+                roomInvitationId = $(this).data("invitation-id");
+                roomInvitationRoomId = $(this).data("invitation-room-id");
+                console.log(roomInvitationRoomId, " yess");
+                invitationElm = $(this);
+            });
+
+            const rejectBtn = document.querySelectorAll(".reject-invvitation");
+            const acceptBtn = document.querySelectorAll(".accept-invvitation");
+
+
+            rejectBtn.forEach((reject) => {
+                reject.addEventListener("click", () => {
+                    $.ajax({
+                        type: "POST",
+                        url: "controllers/home_controller.php",
+                        data: {rejectRoomInvitation: true, roomInvitationId},
+                        success: (data) => {
+                            console.log(data);
+                            $(invitationElm).remove();
+                        }
+                    })
+                });
+            });
+
+            acceptBtn.forEach((accept) => {
+                accept.addEventListener("click", () => {
+                    console.log(roomInvitationRoomId);
+                    $.ajax({
+                        type: "POST",
+                        url: "controllers/home_controller.php",
+                        data: {acceptRoomInvitation: true, roomInvitationId, roomInvitationRoomId},
+                        success: (data) => {
+                            console.log(data);
+                            $(invitationElm).remove();
+                        }
+                    })
+                });
+            });
+
+
+        }
+    });
+}
+
+displayRoomInvitation();
+

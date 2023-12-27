@@ -37,7 +37,7 @@
     </div>
 
     <!-- Chat content -->
-    <div id="chat-content" class="flex-1 flex flex-col bg-gray-700 overflow-hidden">
+    <div id="chat-content" class="hidden flex-1 flex flex-col bg-gray-700 overflow-hidden">
         <!-- Top bar -->
         <div class="border-b border-gray-600 flex px-6 py-2 items-center flex-none shadow-xl">
             <div class="flex flex-col">
@@ -68,19 +68,34 @@
     </div>
 
     <!-- Members List -->
-    <div id="member-list" class="bg-gray-800 text-purple-lighter flex-none w-64 pb-6 md:block">
+    <div id="member-list" class="bg-gray-800 text-purple-lighter flex-none w-64 pb-6 md:block" style="display: none">
         <div
                 class="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-            <div class="flex-auto">
-                <h1 class="font-semibold text-xl leading-tight mb-1 truncate">My Server</h1>
-            </div>
-            <div>
-                <svg class="arrow-gKvcEx icon-2yIBmh opacity-50 cursor-pointer" width="24"
-                     height="24" viewBox="0 0 24 24">
-                    <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"
-                          d="M16.59 8.59004L12 13.17L7.41 8.59004L6 10L12 16L18 10L16.59 8.59004Z">
-                    </path>
-                </svg>
+
+            <!-- This is an example component -->
+            <div id="dropDownContainer" class="hidden max-w-lg mx-auto my-4 relative">
+
+                <!--Dropdown Button-->
+                <button id="dropBtn"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                        type="button" data-dropdown-toggle="dropdown">Dropdown button
+                </button>
+
+                <!-- Dropdown menu -->
+                <div class="hidden absolute r-20 bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow"
+                     id="dropdown">
+                    <ul class="py-1" aria-labelledby="dropdown">
+                        <li>
+                            <p id="addMemberBtn"
+                               class="cursor-pointer text-sm hover:bg-gray-300 text-gray-700 block px-12 py-2">Add
+                                Member</a>
+                        </li>
+                        <li>
+                            <p class="cursor-pointer text-sm hover:bg-gray-300 text-red-700 block px-12 py-2">Exit
+                                Room</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="mb-8">
@@ -118,62 +133,125 @@
                     </div>
                     <div class="relative">
                         <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
-                            <!--<svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" viewBox="0 0 20 20"
-                                 fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                      clip-rule="evenodd"/>
-                            </svg>-->
                             <img class="h-full w-full rounded-full" src="assets/img/<?= $user->picture ?>">
                         </div>
                     </div>
                     <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-                        <div class="text-white py-2 px-8 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-sm transition transform hover:-translate-y-0.5">
-                            Send Friend Request
-                        </div>
-                        <div class="text-white py-2 px-4 uppercase rounded bg-gray-900 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
-                            Message
+
+                        <!-- Dropdown container -->
+                        <div class="relative inline-block text-left">
+
+                            <!-- Trigger button -->
+                            <button type="button"
+                                    class="inline-flex justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                                    id="dropdownBtn">
+                                Room Invitations
+                            </button>
+                            <!-- Dropdown panel -->
+                            <div class="origin-top-right z-100 right-0 mt-2 w-56 rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 hidden"
+                                 id="dropdown-panel">
+                                <div class="relative">
+
+                                    <!-- List of room invitations -->
+                                    <div id="room-invite" class="absolute bg-white flex flex-col px-2 overflow-y-auto">
+
+
+
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="mt-20 text-center border-b pb-12"><h1 class="text-4xl font-medium text-white-700">Jessica
-                        Jones,
-                        <span class="font-light text-white-500">27</span></h1>
+                <div class="mt-20 text-center border-b pb-12">
+                    <h1 class="text-4xl font-medium text-white-700">Jessica Jones,
+                        <span class="font-light text-white-500">27</span>
+                    </h1>
                     <p class="font-light text-white-600 mt-3">Bucharest, Romania</p>
                     <p class="mt-8 text-white-500">Solution Manager - Creative Tim Officer</p>
-                    <p class="mt-2 text-white-500">University of Computer Science</p></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Room Creation -->
-    <div id="roomForm" class="absolute top-1/4 left-1/3 hidden mt-2">
-        <div class="bg-gray-900 text-purple-lighter p-4 rounded">
-            <div class="mb-2">
-                <label for="roomName" class="text-white">Room Name</label>
-                <input type="text" id="roomName"
-                       class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"
-                       placeholder="Room Name"/>
-            </div>
-            <div class="mb-2">
-                <label for="roomMembers" class="text-white">Room Members</label>
-                <select id="roomMembers" multiple name="room-members[]"
-                        class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
-                    <?php foreach ($users as $user) {
-                        if ($user["user_id"] != $_SESSION["user_id"]) {
-                            ?>
-                            <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
-                        <?php }
-                    } ?>
-                </select>
-            </div>
-            <div class="mt-8 cursor-pointer text-center">
-                <div id="addRoomBtn"
-                     class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
-                    Add New Room
+                    <p class="mt-2 text-white-500">University of Computer Science</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="assets/js/home.js"></script>
+    <div class="absolute top-1/4 left-1/3 inline-block text-left">
+
+        <!-- Room Creation -->
+        <div id="roomForm" class="absolute top-1/4 left-1/3 hidden mt-2">
+            <div class="bg-gray-900 text-purple-lighter p-4 rounded">
+                <div class="mb-2">
+                    <label for="roomName" class="text-white">Room Name</label>
+                    <input type="text" id="roomName"
+                           class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"
+                           placeholder="Room Name"/>
+                </div>
+                <div class="mb-2">
+                    <label for="roomMembers" class="text-white">Room Members</label>
+                    <select id="roomMembers" multiple name="room-members[]"
+                            class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
+                        <?php foreach ($users as $user) {
+                            if ($user["user_id"] != $_SESSION["user_id"]) {
+                                ?>
+                                <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
+                            <?php }
+                        } ?>
+                    </select>
+                </div>
+                <div class="mt-8 cursor-pointer text-center">
+                    <div id="addRoomBtn"
+                         class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
+                        Add New Room
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Members adding -->
+        <div id="membersForm" class="hidden mt-2">
+            <div class="bg-gray-900 text-purple-lighter p-4 rounded">
+                <div class="mb-2">
+                    <label for="inviteRoomMembers" class="text-white">Add New Room Members</label>
+                    <select id="inviteRoomMembers" multiple name="room-members[]"
+                            class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
+                        <?php foreach ($users as $user) {
+                            if ($user["user_id"] != $_SESSION["user_id"]) {
+                                ?>
+                                <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
+                            <?php }
+                        } ?>
+                    </select>
+                </div>
+                <div class="mt-8 cursor-pointer text-center">
+                    <div id="addNewMemberBtn"
+                         class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white hover hover:bg-gray-800">
+                        Add New Members
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/home.js"></script>
+    <script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
+
+    <script>
+        const dropdownButton = document.getElementById('dropdownBtn');
+        const dropdownPanel = document.getElementById('dropdown-panel');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownPanel.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            const isInsideDropdown = dropdownButton.contains(target) || dropdownPanel.contains(target);
+
+            if (!isInsideDropdown) {
+                dropdownPanel.classList.add('hidden');
+            }
+        });
+
+    </script>
