@@ -350,3 +350,15 @@ function displayRoomInvitation() {
 
 displayRoomInvitation();
 
+
+function banMember() {
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {},
+        success: (data) => {
+            
+        }
+    })
+}
+

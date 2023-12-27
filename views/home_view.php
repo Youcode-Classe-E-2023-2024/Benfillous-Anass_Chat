@@ -248,7 +248,6 @@
         document.addEventListener('click', (event) => {
             const target = event.target;
             const isInsideDropdown = dropdownButton.contains(target) || dropdownPanel.contains(target);
-
             if (!isInsideDropdown) {
                 dropdownPanel.classList.add('hidden');
             }

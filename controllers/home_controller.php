@@ -76,6 +76,12 @@ if (isset($_POST["rejectRoomInvitation"])) {
     exit;
 }
 
+if (isset($_POST)) {
+    extract($_POST);
+    Room::banMember($room, $member);
+    exit;
+}
+
 
 if (isset($_POST['logout'])) {
     $authentication = new Authentication();
