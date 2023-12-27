@@ -55,9 +55,9 @@ let defaultRoomId = 0;
 const chatInput = document.getElementById("message-input");
 let currentRoom = 0;
 
-function displayRooms() {
+async function displayRooms() {
     roomsSection.innerHTML = "";
-    $.ajax({
+    await $.ajax({
         type: "POST",
         url: "controllers/home_controller.php",
         data: {req: "displayRooms"},
@@ -137,17 +137,18 @@ function displayRoomMembers(roomId) {
 
 const chatSection = document.getElementById("chat-section");
 
-function displayChat(roomId) {
+async function displayChat(roomId) {
+    console.log("Before displayRooms AJAX");
     chatSection.innerHTML = "";
-    $.ajax({
-        type: "POST",
-        url: "controllers/home_controller.php",
-        data: {roomId, chat: 1},
-        success: (data) => {
-            let chatData = JSON.parse(data);
-            chatData.forEach((message) => {
-                let date = formatTimestamp(message.date);
-                chatSection.innerHTML += `
+    await $.ajax({
+            type: "POST",
+            url: "controllers/home_controller.php",
+            data: {roomId, chat: 1},
+            success: (data) => {
+                let chatData = JSON.parse(data);
+                chatData.forEach((message) => {
+                    let date = formatTimestamp(message.date);
+                    chatSection.innerHTML += `
                                  <div class="border-b border-gray-600 py-3 flex items-start mb-4 text-sm">
                                     <img src="assets/img/${message.picture}"
                                          class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
@@ -159,10 +160,12 @@ function displayChat(roomId) {
                                         <p class="text-white leading-normal">${message.message}</p>
                                     </div>
                                 </div>`;
-            })
-            chatSection.scrollTop = chatSection.scrollHeight;
+                })
+                chatSection.scrollTop = chatSection.scrollHeight;
+                console.log("After displayRooms AJAX");
+            }
         }
-    })
+    )
 }
 
 function writeChat(roomId, message) {
@@ -180,7 +183,26 @@ function writeChat(roomId, message) {
 
 }
 
-displayRooms();
+
+setInterval(intervalDisplay, 2000);
+
+let isFetchingData = false;
+
+async function intervalDisplay() {
+    if (!isFetchingData) {
+        isFetchingData = true;
+
+        try {
+            await displayRooms();
+            await displayChat(currentRoom);
+            console.log(currentRoom);
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            isFetchingData = false;
+        }
+    }
+}
 
 chatInput.addEventListener("keypress", function (event) {
     // If the user presses the "Enter" key on the keyboard
