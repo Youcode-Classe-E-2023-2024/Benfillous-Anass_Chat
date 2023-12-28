@@ -2,7 +2,8 @@
 
 Welcome to the Chatroom website, a real-time chat application with a user-friendly interface. This project aims to provide a seamless chatting experience with features like user authentication, room creation, friend management, and real-time state handling using AJAX.
 
-![](../../../Users/youcode/Downloads/Home.png)
+![Home](https://github.com/Youcode-Classe-E-2023-2024/Benfillous-Anass_Chat/assets/109225791/82e1e9ad-d2b5-400c-9194-3d273d4fad1b)
+
 
 
 ## Table of Contents
