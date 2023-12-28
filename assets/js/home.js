@@ -411,6 +411,7 @@ function displayRoomInvitation() {
                         success: (data) => {
                             console.log(data);
                             $(invitationElm).remove();
+                            displayRooms();
                         }
                     })
                 });

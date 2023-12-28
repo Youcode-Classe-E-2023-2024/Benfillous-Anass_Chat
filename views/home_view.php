@@ -178,7 +178,7 @@
         <div id="roomForm" class="absolute top-1/4 left-1/3 hidden mt-2">
             <div class="bg-gray-900 text-purple-lighter p-4 rounded">
                 <div class="mb-2">
-                    <label for="roomName" class="text-white">Room Name</label>
+                    <label for="roomName" class="px-20 text-white">Room Name</label>
                     <input type="text" id="roomName"
                            class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white"
                            placeholder="Room Name"/>
