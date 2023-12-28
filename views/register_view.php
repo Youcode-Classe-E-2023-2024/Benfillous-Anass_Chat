@@ -25,8 +25,8 @@
     <label for="password">Password</label>
     <input class="login-input" name="password" type="password" placeholder="Password" id="password">
 
-    <div class="social">
-        <button name="signup">Sign Up</button>
+    <div class="social flex justify-center">
+        <button name="signup" id="btn">Sign Up</button>
     </div>
     <div class="social items-center flex-col">
         <p class="text-sm mb-4">Or</p>

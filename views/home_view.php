@@ -27,14 +27,6 @@
                 </svg>
             </div>
         </div>
-        <form
-                method="post" action="index.php?page=home"
-                class="rounded-lg text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200 absolute bottom-3">
-            <button name="logout">
-                Logout
-            </button>
-        </form>
-
     </div>
 
     <!-- Chat content -->
@@ -121,7 +113,7 @@
     <!-- Profile -->
     <div id="profile-section" class="hidden w-full"
          style="background: url('<?= PATH ?>assets/img/online-chat-rooms.jpg')">
-        <div class="z-20 mx-auto bg-gray-500 bg-opacity-50">
+        <div class="z-20 w-[900px] h-[450px] mx-auto bg-gray-500 bg-opacity-50">
             <div class="p-8 shadow mt-24">
                 <div class="grid grid-cols-1 md:grid-cols-3">
                     <div class="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
@@ -143,11 +135,18 @@
                         <div class="relative inline-block text-left">
 
                             <!-- Trigger button -->
-                            <button type="button"
-                                    class="inline-flex justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                                    id="dropdownBtn">
-                                Room Invitations
-                            </button>
+                            <div class="flex flex-row ">
+                                <button type="button"
+                                        class="inline-flex justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                                        id="dropdownBtn">
+                                    Room Invitations
+                                </button>i
+                                <button type="button"
+                                        class="inline-flex ml-4 justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                                        id="dropdownBtn">
+                                    Room Invitations
+                                </button>
+                            </div>
                             <!-- Dropdown panel -->
                             <div class="origin-top-right z-100 right-0 mt-2 w-56 rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 hidden"
                                  id="dropdown-panel">
@@ -167,7 +166,80 @@
                 <div class="mt-20 text-center border-b pb-12">
                     <h1 class="text-4xl font-medium text-white-700"><?= ucfirst($user->username) ?></h1>
                     <p class="font-light text-white-600 mt-3"><?= $user->email ?></p>
+                    <form
+                            method="post" action="index.php?page=home"
+                            class="rounded-lg w-40 ml-[340px] mt-10 text-red-400 cursor-pointer hover:bg-red-600 hover:text-red-200  bottom-3">
+                        <button class="logout-btn" name="logout">
+                            Logout
+                        </button>
+                    </form>
+                    <div class="active-users flex flex-row p-2 overflow-auto w-0 min-w-full">
+                        <div class="text-sm text-center mr-4">
+
+                        </div>
+
+
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-blue-600 rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/women/12.jpg"
+                                         alt=""
+                                    />
+                                </div></div><p>Anna</p></div>
+
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-blue-600 rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/women/42.jpg"
+                                         alt=""
+                                    />
+                                </div></div><p>Cathy</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-transparent rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/women/87.jpg"
+                                         alt=""
+                                    />
+                                    <div class="absolute bg-gray-900 p-1 rounded-full bottom-0 right-0">
+                                        <div class="bg-green-500 rounded-full w-3 h-3"></div>
+                                    </div>
+                                </div></div><p>Madona</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-transparent rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/women/23.jpg"
+                                         alt=""
+                                    />
+                                    <div class="absolute bg-gray-900 p-1 rounded-full bottom-0 right-0">
+                                        <div class="bg-green-500 rounded-full w-3 h-3"></div>
+                                    </div>
+                                </div></div><p>Emma</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-blue-600 rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/men/65.jpg"
+                                         alt=""
+                                    />
+                                </div></div><p>Mark</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-blue-600 rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/women/65.jpg"
+                                         alt=""
+                                    />
+                                </div></div><p>Eva</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-transparent rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/men/31.jpg"
+                                         alt=""
+                                    />
+                                    <div class="absolute bg-gray-900 p-1 rounded-full bottom-0 right-0">
+                                        <div class="bg-green-500 rounded-full w-3 h-3"></div>
+                                    </div>
+                                </div></div><p>Max</p></div>
+                        <div class="text-sm text-center mr-4"><div class="p-1 border-4 border-blue-600 rounded-full"><div class="w-16 h-16 relative flex flex-shrink-0">
+                                    <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="https://randomuser.me/api/portraits/men/81.jpg"
+                                         alt=""
+                                    />
+                                </div></div><p>Adam</p></div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
