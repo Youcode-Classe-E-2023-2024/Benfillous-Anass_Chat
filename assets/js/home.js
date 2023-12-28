@@ -423,6 +423,86 @@ function displayRoomInvitation() {
 }
 
 
+const friendInviteSection = document.getElementById("friend-invite");
+let friendInvitationId;
+let friendInvitationRoomId;
+
+function displayFriendInvitation() {
+
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {req: "displayInvite"},
+        success: (data) => {
+            let invitationData = JSON.parse(data);
+            if (invitationData.length === 0) {
+                friendInviteSection.innerHTML = '<p class="text-gray-700">invitation list is empty</p>'
+            } else
+                friendInviteSection.innerHTML = "";
+            invitationData.forEach((invitation) => {
+                friendInviteSection.innerHTML += `
+                                        <div data-invitation-id="${invitation.invitation_id}" data-invitation-friend-id="${invitation.friend_id}" class="invite">
+                                            <p class="text-gray-700">${invitation.username} invite You to Room ${invitation.room_name}</p>
+                                            <div class="flex flex-row">
+                                                <button type="button"
+                                                        class="accept-invvitation bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
+                                                    Accept
+                                                </button>
+                                                <button type="button"
+                                                        class="reject-invvitation bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300">
+                                                    reject
+                                                </button>
+                                            </div>
+                                            <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+                                        </div>`;
+            })
+
+            let invitationElm;
+            $("#Friend-invite").off("click", ".invite").on("click", ".invite", function () {
+                FriendInvitationId = $(this).data("invitation-id");
+                FriendInvitationFriendId = $(this).data("invitation-Friend-id");
+                invitationElm = $(this);
+            });
+
+            const rejectBtn = document.querySelectorAll(".reject-invvitation");
+            const acceptBtn = document.querySelectorAll(".accept-invvitation");
+
+
+            rejectBtn.forEach((reject) => {
+                $(reject).off("click").on("click", () => {
+                    $.ajax({
+                        type: "POST",
+                        url: "controllers/home_controller.php",
+                        data: {rejectFriendInvitation: true, FriendInvitationId},
+                        success: (data) => {
+                            console.log(data);
+                            $(invitationElm).remove();
+                        }
+                    })
+                });
+            });
+
+            acceptBtn.forEach((accept) => {
+                $(accept).off("click").on("click", () => {
+                    console.log(FriendInvitationRoomId);
+                    $.ajax({
+                        type: "POST",
+                        url: "controllers/home_controller.php",
+                        data: {acceptFriendInvitation: true, FriendInvitationId, FriendInvitationFriendId},
+                        success: (data) => {
+                            console.log(data);
+                            $(invitationElm).remove();
+                            displayRooms();
+                        }
+                    })
+                });
+            });
+
+
+        }
+    });
+}
+
 function banMember(memberId) {
     $.ajax({
         type: "POST",
@@ -438,10 +518,17 @@ function banMember(memberId) {
 
 const dropdownButton = document.getElementById('dropdownBtn');
 const dropdownPanel = document.getElementById('dropdown-panel');
+const dropdownButtonFriend = document.getElementById('dropdownBtnFriend');
+const dropdownPanelFriend = document.getElementById('dropdown-panel-friend');
 
 $(dropdownButton).off("click").on("click", () => {
     dropdownPanel.classList.toggle('hidden');
     displayRoomInvitation();
+});
+
+$(dropdownButtonFriend).off("click").on("click", () => {
+    dropdownPanelFriend.classList.toggle('hidden');
+//    displayFriendInvitation();
 });
 
 document.addEventListener('click', (event) => {
@@ -449,6 +536,14 @@ document.addEventListener('click', (event) => {
     const isInsideDropdown = dropdownButton.contains(target) || dropdownPanel.contains(target);
     if (!isInsideDropdown) {
         dropdownPanel.classList.add('hidden');
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const target = event.target;
+    const isInsideDropdown = dropdownButtonFriend.contains(target) || dropdownPanelFriend.contains(target);
+    if (!isInsideDropdown) {
+        dropdownPanelFriend.classList.add('hidden');
     }
 });
 

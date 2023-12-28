@@ -143,17 +143,31 @@
                                 </button>i
                                 <button type="button"
                                         class="inline-flex ml-4 justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                                        id="dropdownBtn">
-                                    Room Invitations
+                                        id="dropdownBtnFriend">
+                                    Friend Invitations
                                 </button>
                             </div>
-                            <!-- Dropdown panel -->
+                            <!-- Dropdown panel Room -->
                             <div class="origin-top-right z-100 right-0 mt-2 w-56 rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 hidden"
                                  id="dropdown-panel">
                                 <div class="relative">
 
                                     <!-- List of room invitations -->
                                     <div id="room-invite" class="absolute bg-white flex flex-col px-2 overflow-y-auto">
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Dropdown panel Friend -->
+                            <div class="origin-top-right z-100 right-0 mt-2 w-56 rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 hidden"
+                                 id="dropdown-panel-friend">
+                                <div class="relative">
+
+                                    <!-- List of room invitations -->
+                                    <div id="friend-invite" class="absolute bg-white flex flex-col px-2 overflow-y-auto">
 
 
                                     </div>
