@@ -2,6 +2,7 @@
 
 Welcome to the Chatroom website, a real-time chat application with a user-friendly interface. This project aims to provide a seamless chatting experience with features like user authentication, room creation, friend management, and real-time state handling using AJAX.
 
+![Uploading Home.png…]()
 
 
 ## Table of Contents
