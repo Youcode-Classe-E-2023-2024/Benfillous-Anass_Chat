@@ -57,6 +57,37 @@ let currentRoom = 0;
 const dropDownBtn = document.getElementById("dropBtn");
 const dropDownContainer = document.getElementById("dropDownContainer");
 
+function getRoomId(roomId) {
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {roomId, req: "getRoomId"},
+        success: (data) => {
+            console.log(data);
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    })
+}
+
+function displayMemberList() {
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {req: "displayUsers"},
+        success: (data) => {
+            let memberData = JSON.parse(data);
+            const roomMemberList = document.getElementById("inviteRoomMembers");
+            roomMemberList.innerHTML = "";
+            memberData.forEach((roomMember) => {
+                roomMemberList.innerHTML += `<option value="${roomMember.user_id}"> ${roomMember.username}</option>`
+            })
+        }
+    })
+}
+
+let creatorId = 0;
 
 function displayRooms() {
     roomsSection.innerHTML = "";
@@ -70,10 +101,9 @@ function displayRooms() {
                 if (index === 0) {
                     defaultRoomId = room.room_id;
                 }
-
                 // Add a data attribute to store the room information
                 roomsSection.innerHTML += `
-                        <div class="room cursor-pointer mb-4 relative" data-room-name="${room.room_name}" data-room-id="${room.room_id}">
+                        <div class="room cursor-pointer mb-4 relative" data-room-name="${room.room_name}" data-room-creator="${room.creator}" data-room-id="${room.room_id}">
                             <div class="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden">
                                 <img src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                             </div>
@@ -87,8 +117,8 @@ function displayRooms() {
             $("#rooms-section").off("click", ".room").on("click", ".room", function () {
                 const roomId = $(this).data("room-id");
                 const roomName = $(this).data("room-name");
+                creatorId = $(this).data("room-creator");
                 dropDownContainer.classList.remove("hidden");
-                console.log("Room clicked:", roomId);
                 currentRoom = roomId;
                 dropDownBtn.innerText = roomName + "'s Room";
                 displayRoomMembers(currentRoom);
@@ -97,6 +127,9 @@ function displayRooms() {
                 chatContent.classList.remove("hidden");
                 profileSection.classList.add("hidden");
                 roomForm.classList.add("hidden");
+
+                getRoomId(currentRoom);
+                displayMemberList();
             });
             document.querySelectorAll('.room').forEach((room) => {
                 room.addEventListener('mouseenter', () => {
@@ -127,14 +160,52 @@ function displayRoomMembers(roomId) {
             let membersData = JSON.parse(data);
             console.log(membersData);
             membersData.forEach((member) => {
-                membersSection.innerHTML += `<div class="py-4 flex border-b border-gray-600">
-                        <img src="assets/img/${member.picture}"
-                        class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
-                        <span class="font-bold text-red-300 cursor-pointer hover:underline">${member.username}</span></div>`;
-            })
+                let imageAdmin = "";
+                let ban = "";
+                if (member.user_id == creatorId) {
+                    imageAdmin += `<img src="assets/img/png-clipart-computer-icons-crown-crown-svg-free-black-crown-image-file-formats-king.png" class="cursor-pointer w-5 h-5 mx-3 rounded-3xl mr-3" alt="">`;
+                } else if (creatorId == connected) {
+                    ban = `<button
+                            data-member-id="${member.user_id}"
+                          class="btn-ban items-center bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-md">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 mr-1"
+                            fill="red"
+                            viewBox="0 0 24 24"
+                            stroke="white"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>`;
+                }
+
+                membersSection.innerHTML += `<div class="flex flex-row items-center">
+                            <div class="py-4 flex border-b border-gray-600">
+                            <img src="assets/img/${member.picture}"
+                            class="cursor-pointer w-10 h-10 rounded-3xl mr-3">
+                            <span class="font-bold text-red-300 cursor-pointer hover:underline">${member.username}</span>${imageAdmin}</div>
+                            <div class="ban-btn-section w-[30px] ml-4">
+                                   ${ban}
+                            </div>
+                        </div>
+                        `;
+            });
+
+            // Event binding outside the loop
+            $(".ban-btn-section").off("click", ".btn-ban").on("click", ".btn-ban", function () {
+                let memberId = $(this).data("member-id");
+                banMember(memberId);
+            });
         }
-    })
+    });
 }
+
 
 const chatSection = document.getElementById("chat-section");
 
@@ -186,7 +257,7 @@ function writeChat(roomId, message) {
 
 displayRooms();
 
-/*setInterval(intervalDisplay, 2000);*/
+/*setInterval(displayRooms, 1000);*/
 
 /*let isFetchingData = false;
 
@@ -351,14 +422,14 @@ function displayRoomInvitation() {
 }
 
 
-
-function banMember() {
+function banMember(memberId) {
     $.ajax({
         type: "POST",
         url: "controllers/home_controller.php",
-        data: {},
+        data: {memberId, currentRoom, ban: true},
         success: (data) => {
-
+            console.log(data);
+            displayRoomMembers(currentRoom);
         }
     })
 }
@@ -379,3 +450,17 @@ document.addEventListener('click', (event) => {
     }
 });
 
+let connected;
+
+function getConnected() {
+    $.ajax({
+        type: "POST",
+        url: "controllers/home_controller.php",
+        data: {connected: true},
+        success: (data) => {
+            connected = data;
+        }
+    })
+}
+
+getConnected()

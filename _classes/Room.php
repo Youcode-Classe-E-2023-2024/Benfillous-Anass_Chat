@@ -73,7 +73,7 @@ class Room
         $result = $db->query("
             SELECT user.* FROM room_member
             JOIN user ON room_member.user_id = user.user_id
-            WHERE room_member.room_id = '$room_id'
+            WHERE room_member.room_id = '$room_id' AND room_member.banned=0
         ");
 
         if ($result)
@@ -113,5 +113,20 @@ class Room
         mysqli_stmt_bind_param($stmt, 'i', $invitationId);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+    }
+
+    static function memberChecker($room, $member)
+    {
+        global $db;
+        $sql = "SELECT user_id FROM room_member WHERE room_id=? AND user_id=?";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_bind_param($stmt, 'ii', $room, $member);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+
+        if ($result)
+            return $result->fetch_row();
     }
 }

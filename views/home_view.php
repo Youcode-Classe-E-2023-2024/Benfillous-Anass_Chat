@@ -1,6 +1,7 @@
 <!-- component -->
 <!-- Inspired by slack ui clone https://tailwindcomponents.com/component/slack-clone-1 -->
-<div class="font-sans antialiased h-screen bg-transparent flex" style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
+<div class="font-sans antialiased h-screen bg-transparent flex"
+     style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
     <!-- Sidebar / channel list -->
     <div class="bg-gray-900 text-purple-lighter flex-none w-24 p-6 md:block">
         <div id="myprofile" class="cursor-pointer mb-4 border-b border-gray-600 pb-2">
@@ -68,7 +69,7 @@
     </div>
 
     <!-- Members List -->
-    <div id="member-list" class="bg-gray-800 text-purple-lighter flex-none w-64 pb-6 md:block" style="display: none">
+    <div id="member-list" class="overflow-y-auto bg-gray-800 text-purple-lighter flex-none w-64 pb-6 md:block" style="display: none">
         <div
                 class="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
 
@@ -156,7 +157,6 @@
                                     <div id="room-invite" class="absolute bg-white flex flex-col px-2 overflow-y-auto">
 
 
-
                                     </div>
 
                                 </div>
@@ -212,12 +212,6 @@
                     <label for="inviteRoomMembers" class="text-white">Add New Room Members</label>
                     <select id="inviteRoomMembers" multiple name="room-members[]"
                             class="w-full px-2 py-1 border border-gray-600 rounded bg-gray-600 text-white">
-                        <?php foreach ($users as $user) {
-                            if ($user["user_id"] != $_SESSION["user_id"]) {
-                                ?>
-                                <option value="<?= $user["user_id"] ?>"><?= $user["username"] ?></option>
-                            <?php }
-                        } ?>
                     </select>
                 </div>
                 <div class="mt-8 cursor-pointer text-center">

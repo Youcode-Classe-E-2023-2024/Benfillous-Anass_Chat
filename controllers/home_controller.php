@@ -76,12 +76,34 @@ if (isset($_POST["rejectRoomInvitation"])) {
     exit;
 }
 
-if (isset($_POST)) {
-/*    extract($_POST);
-    Room::banMember($room, $member);
-    exit;*/
+if (isset($_POST["ban"])) {
+    extract($_POST);
+    Room::banMember($currentRoom, $memberId);
+    echo ("nadi");
+    exit;
 }
 
+if (isset($_POST["req"]) && $_POST["req"] === "getRoomId") {
+    $_SESSION["currentRoomId"] = $_POST["roomId"];
+    echo $_SESSION["currentRoomId"];
+    exit;
+}
+
+if (isset($_POST["req"]) && $_POST["req"] === "displayUsers") {
+    $membersData = [];
+
+    foreach ($users as $user) {
+        if (!(Room::memberChecker($_SESSION["currentRoomId"], $user["user_id"])))
+            $membersData[] = $user;
+    }
+    echo json_encode($membersData);
+    exit;
+}
+
+if(isset($_POST["connected"])) {
+    echo $_SESSION["user_id"];
+    exit;
+}
 
 if (isset($_POST['logout'])) {
     $authentication = new Authentication();
