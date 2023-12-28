@@ -282,8 +282,11 @@ function displayRoomInvitation() {
         url: "controllers/home_controller.php",
         data: {req: "displayInvite"},
         success: (data) => {
-            roomInviteSection.innerHTML = "";
             let invitationData = JSON.parse(data);
+            if (invitationData.length === 0) {
+                roomInviteSection.innerHTML = '<p class="text-gray-700">invitation list is empty</p>'
+            } else
+                roomInviteSection.innerHTML = "";
             invitationData.forEach((invitation) => {
                 roomInviteSection.innerHTML += `
                                         <div data-invitation-id="${invitation.invitation_id}" data-invitation-room-id="${invitation.room_id}" class="invite">
@@ -306,7 +309,6 @@ function displayRoomInvitation() {
             $("#room-invite").off("click", ".invite").on("click", ".invite", function () {
                 roomInvitationId = $(this).data("invitation-id");
                 roomInvitationRoomId = $(this).data("invitation-room-id");
-                console.log(roomInvitationRoomId, " yess");
                 invitationElm = $(this);
             });
 
@@ -315,7 +317,7 @@ function displayRoomInvitation() {
 
 
             rejectBtn.forEach((reject) => {
-                reject.addEventListener("click", () => {
+                $(reject).off("click").on("click", () => {
                     $.ajax({
                         type: "POST",
                         url: "controllers/home_controller.php",
@@ -329,7 +331,7 @@ function displayRoomInvitation() {
             });
 
             acceptBtn.forEach((accept) => {
-                accept.addEventListener("click", () => {
+                $(accept).off("click").on("click", () => {
                     console.log(roomInvitationRoomId);
                     $.ajax({
                         type: "POST",
@@ -348,7 +350,6 @@ function displayRoomInvitation() {
     });
 }
 
-displayRoomInvitation();
 
 
 function banMember() {
@@ -357,8 +358,24 @@ function banMember() {
         url: "controllers/home_controller.php",
         data: {},
         success: (data) => {
-            
+
         }
     })
 }
+
+const dropdownButton = document.getElementById('dropdownBtn');
+const dropdownPanel = document.getElementById('dropdown-panel');
+
+$(dropdownButton).off("click").on("click", () => {
+    dropdownPanel.classList.toggle('hidden');
+    displayRoomInvitation();
+});
+
+document.addEventListener('click', (event) => {
+    const target = event.target;
+    const isInsideDropdown = dropdownButton.contains(target) || dropdownPanel.contains(target);
+    if (!isInsideDropdown) {
+        dropdownPanel.classList.add('hidden');
+    }
+});
 

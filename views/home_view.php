@@ -1,6 +1,6 @@
 <!-- component -->
 <!-- Inspired by slack ui clone https://tailwindcomponents.com/component/slack-clone-1 -->
-<div class="font-sans antialiased h-screen bg-transparent flex">
+<div class="font-sans antialiased h-screen bg-transparent flex" style="background: url('<?= PATH ?>assets/img/online-chat-rooms.webp')">
     <!-- Sidebar / channel list -->
     <div class="bg-gray-900 text-purple-lighter flex-none w-24 p-6 md:block">
         <div id="myprofile" class="cursor-pointer mb-4 border-b border-gray-600 pb-2">
@@ -165,12 +165,8 @@
                     </div>
                 </div>
                 <div class="mt-20 text-center border-b pb-12">
-                    <h1 class="text-4xl font-medium text-white-700">Jessica Jones,
-                        <span class="font-light text-white-500">27</span>
-                    </h1>
-                    <p class="font-light text-white-600 mt-3">Bucharest, Romania</p>
-                    <p class="mt-8 text-white-500">Solution Manager - Creative Tim Officer</p>
-                    <p class="mt-2 text-white-500">University of Computer Science</p>
+                    <h1 class="text-4xl font-medium text-white-700"><?= ucfirst($user->username) ?></h1>
+                    <p class="font-light text-white-600 mt-3"><?= $user->email ?></p>
                 </div>
             </div>
         </div>
@@ -236,21 +232,3 @@
 
     <script src="assets/js/home.js"></script>
     <script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
-
-    <script>
-        const dropdownButton = document.getElementById('dropdownBtn');
-        const dropdownPanel = document.getElementById('dropdown-panel');
-
-        dropdownButton.addEventListener('click', () => {
-            dropdownPanel.classList.toggle('hidden');
-        });
-
-        document.addEventListener('click', (event) => {
-            const target = event.target;
-            const isInsideDropdown = dropdownButton.contains(target) || dropdownPanel.contains(target);
-            if (!isInsideDropdown) {
-                dropdownPanel.classList.add('hidden');
-            }
-        });
-
-    </script>

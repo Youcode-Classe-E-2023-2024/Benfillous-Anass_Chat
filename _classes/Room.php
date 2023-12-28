@@ -98,7 +98,7 @@ class Room
         global $db;
         $sql = "UPDATE room_member SET banned=1 WHERE room_id=? AND user_id=?";
         $stmt = mysqli_stmt_init($db);
-        mysqli_stmt_prepare($stmt, $sql;
+        mysqli_stmt_prepare($stmt, $sql);
         mysqli_stmt_bind_param($stmt, 'ii', $room, $member);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
@@ -109,7 +109,7 @@ class Room
         global $db;
         $sql = "DELETE FROM $table WHERE  invitation_id=?";
         $stmt = mysqli_stmt_init($db);
-        mysqli_stmt_prepare($stmt, $sql;
+        mysqli_stmt_prepare($stmt, $sql);
         mysqli_stmt_bind_param($stmt, 'i', $invitationId);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);

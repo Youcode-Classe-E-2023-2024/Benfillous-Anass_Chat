@@ -77,9 +77,9 @@ if (isset($_POST["rejectRoomInvitation"])) {
 }
 
 if (isset($_POST)) {
-    extract($_POST);
+/*    extract($_POST);
     Room::banMember($room, $member);
-    exit;
+    exit;*/
 }
 
 
