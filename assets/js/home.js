@@ -430,6 +430,7 @@ function banMember(memberId) {
         success: (data) => {
             console.log(data);
             displayRoomMembers(currentRoom);
+            displayChat(currentRoom);
         }
     })
 }

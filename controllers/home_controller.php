@@ -18,7 +18,7 @@ if (isset($_POST["roomName"])) {
 }
 
 if (isset($_POST["req"]) && $_POST["req"] == "displayRooms") {
-    $rooms = Room::getAll();
+    $rooms = Room::getAll($_SESSION["user_id"]);
     echo json_encode($rooms);
     exit;
 }

@@ -59,10 +59,12 @@ class Room
         mysqli_stmt_execute($stmt);
     }
 
-    static function getAll()
+    static function getAll($user_id)
     {
         global $db;
-        $result = $db->query("SELECT * FROM room");
+        $result = $db->query("SELECT room.* FROM room_member
+    JOIN room ON room_member.room_id = room.room_id
+    WHERE room_member.user_id='$user_id'");
         if ($result)
             return $result->fetch_all(MYSQLI_ASSOC);
     }
@@ -96,12 +98,18 @@ class Room
     static function banMember($room, $member)
     {
         global $db;
-        $sql = "UPDATE room_member SET banned=1 WHERE room_id=? AND user_id=?";
+        $sql = "DELETE FROM room_member WHERE room_id=? AND user_id=?";
         $stmt = mysqli_stmt_init($db);
         mysqli_stmt_prepare($stmt, $sql);
         mysqli_stmt_bind_param($stmt, 'ii', $room, $member);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+        $deleteSql = "DELETE FROM message WHERE user_id=? AND room_id=?";
+        $deleteStmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($deleteStmt, $deleteSql);
+        mysqli_stmt_bind_param($deleteStmt, 'ii', $member, $room);
+        mysqli_stmt_execute($deleteStmt);
+        mysqli_stmt_close($deleteStmt);
     }
 
     static function removeInvitation($table, $invitationId)
