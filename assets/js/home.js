@@ -10,7 +10,7 @@ const addRoom = document.getElementById("addRoom");
 myProfile.addEventListener("click", () => {
     memberList.style.display = "none";
     chatContent.classList.add("hidden");
-    profileSection.classList.remove("hidden");
+    profileSection.classList.toggle("hidden");
     roomForm.classList.add("hidden");
 });
 rooms.forEach((elm) => {
@@ -77,6 +77,7 @@ function displayMemberList() {
         url: "controllers/home_controller.php",
         data: {req: "displayUsers"},
         success: (data) => {
+
             let memberData = JSON.parse(data);
             const roomMemberList = document.getElementById("inviteRoomMembers");
             roomMemberList.innerHTML = "";
@@ -427,7 +428,7 @@ const friendInviteSection = document.getElementById("friend-invite");
 let friendInvitationId;
 let friendInvitationRoomId;
 
-function displayFriendInvitation() {
+/*function displayFriendInvitation() {
 
     $.ajax({
         type: "POST",
@@ -501,7 +502,7 @@ function displayFriendInvitation() {
 
         }
     });
-}
+}*/
 
 function banMember(memberId) {
     $.ajax({
@@ -540,13 +541,13 @@ document.addEventListener('click', (event) => {
     }
 });
 
-document.addEventListener('click', (event) => {
+/*document.addEventListener('click', (event) => {
     const target = event.target;
     const isInsideDropdown = dropdownButtonFriend.contains(target) || dropdownPanelFriend.contains(target);
     if (!isInsideDropdown) {
         dropdownPanelFriend.classList.add('hidden');
     }
-});
+});*/
 
 let connected;
 

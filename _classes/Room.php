@@ -137,4 +137,40 @@ class Room
         if ($result)
             return $result->fetch_row();
     }
+
+    static function messageCounter($user) {
+        global $db;
+        $sql = "SELECT * FROM message WHERE user_id=?";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_bind_param($stmt, 'i', $user);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+        return $result->num_rows;
+    }
+
+    static function roomJoinedCounter($user) {
+        global $db;
+        $sql = "SELECT * FROM room_member WHERE user_id=?";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_bind_param($stmt, 'i', $user);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+        return $result->num_rows;
+    }
+
+    static function roomCreatedCounter($user) {
+        global $db;
+        $sql = "SELECT * FROM room WHERE creator=?";
+        $stmt = mysqli_stmt_init($db);
+        mysqli_stmt_prepare($stmt, $sql);
+        mysqli_stmt_bind_param($stmt, 'i', $user);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+        return $result->num_rows;
+    }
 }

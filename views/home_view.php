@@ -83,7 +83,7 @@
                                class="cursor-pointer text-sm hover:bg-gray-300 text-gray-700 block px-12 py-2">Add
                                 Member</a>
                         </li>
-                        <li>
+                        <li onclick="banMember(<?= $_SESSION["user_id"] ?>);">
                             <p class="cursor-pointer text-sm hover:bg-gray-300 text-red-700 block px-12 py-2">Exit
                                 Room</a>
                         </li>
@@ -117,12 +117,12 @@
             <div class="p-8 shadow mt-24">
                 <div class="grid grid-cols-1 md:grid-cols-3">
                     <div class="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
-                        <div><p class="font-bold text-gray-700 text-xl">22</p>
-                            <p class="text-gray-400">Friends</p></div>
-                        <div><p class="font-bold text-gray-700 text-xl">10</p>
-                            <p class="text-gray-400">Photos</p></div>
-                        <div><p class="font-bold text-gray-700 text-xl">89</p>
-                            <p class="text-gray-400">Comments</p></div>
+                        <div><p class="font-bold text-gray-700 text-xl"><?= Room::roomCreatedCounter($_SESSION["user_id"]) ?></p>
+                            <p class="text-gray-400">Room Created </p></div>
+                        <div><p class="font-bold text-gray-700 text-xl"><?= Room::roomJoinedCounter($_SESSION["user_id"]) ?></p>
+                            <p class="text-gray-400">Room Joined</p></div>
+                        <div><p class="font-bold text-gray-700 text-xl"><?= Room::messageCounter($_SESSION["user_id"]) ?></p>
+                            <p class="text-gray-400">Message </p></div>
                     </div>
                     <div class="relative">
                         <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
@@ -140,12 +140,12 @@
                                         class="inline-flex justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
                                         id="dropdownBtn">
                                     Room Invitations
-                                </button>i
-                                <button type="button"
+                                </button>
+                                <!--<button type="button"
                                         class="inline-flex ml-4 justify-center items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
                                         id="dropdownBtnFriend">
                                     Friend Invitations
-                                </button>
+                                </button>-->
                             </div>
                             <!-- Dropdown panel Room -->
                             <div class="origin-top-right z-100 right-0 mt-2 w-56 rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 hidden"
