@@ -159,7 +159,17 @@ function displayRoomMembers(roomId) {
         success: (data) => {
             let membersData = JSON.parse(data);
             console.log(membersData);
+            let bannedCheker = false;
             membersData.forEach((member) => {
+                if (member.user_id == connected) {
+                    bannedCheker = true;
+                }
+            })
+/*            if (bannedCheker === false ) {
+                window.location.href = "index.php?page=home";
+            }*/
+            membersData.forEach((member) => {
+
                 let imageAdmin = "";
                 let ban = "";
                 if (member.user_id == creatorId) {
@@ -257,25 +267,15 @@ function writeChat(roomId, message) {
 
 displayRooms();
 
-/*setInterval(displayRooms, 1000);*/
+setInterval(intervalDisplay, 5000);
 
-/*let isFetchingData = false;
 
-async function intervalDisplay() {
-    if (!isFetchingData) {
-        isFetchingData = true;
-
-        try {
-            await displayRooms();
-            await displayChat(currentRoom);
-            console.log(currentRoom);
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            isFetchingData = false;
-        }
-    }
-}*/
+function intervalDisplay() {
+    displayRooms();
+    displayChat(currentRoom);
+    displayRoomMembers(currentRoom);
+    getConnected();
+}
 
 chatInput.addEventListener("keypress", function (event) {
     // If the user presses the "Enter" key on the keyboard
@@ -313,7 +313,7 @@ const addNewMemberBtn = document.getElementById("addNewMemberBtn");
 
 displayMembersAdding.addEventListener("click", (event) => {
     membersForm.classList.remove("hidden");
-    event.stopPropagation(); // Prevent the click event from reaching the document click listener immediately
+    event.stopPropagation();
 });
 
 
@@ -512,6 +512,7 @@ function banMember(memberId) {
             console.log(data);
             displayRoomMembers(currentRoom);
             displayChat(currentRoom);
+
         }
     })
 }
@@ -556,6 +557,7 @@ function getConnected() {
         data: {connected: true},
         success: (data) => {
             connected = data;
+
         }
     })
 }
